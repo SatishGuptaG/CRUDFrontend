@@ -11,7 +11,11 @@ const DashboardBrandsEditPage = () => {
            <div className="w-[80px] 800px:w-[330px]">
              <DashboardSideBar active={1} />
            </div>
+           <div className="w-full justify-center flex">
            <BrandEdit />
+           </div>
+
+       
          </div>
    </div>
   )
