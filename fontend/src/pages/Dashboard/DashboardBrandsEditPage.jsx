@@ -1,0 +1,20 @@
+import React from 'react'
+import BrandEdit from '../../component/brand/BrandEdit'
+import DashboardSideBar from '../../components/Dashboard/DashboardSideBar'
+import DashboardHeader from '../../components/Dashboard/DashboardHeader'
+
+const DashboardBrandsEditPage = () => {
+  return (
+    <div>
+    <DashboardHeader />
+    <div className="flex items-start justify-between w-full">
+           <div className="w-[80px] 800px:w-[330px]">
+             <DashboardSideBar active={1} />
+           </div>
+           <BrandEdit />
+         </div>
+   </div>
+  )
+}
+
+export default DashboardBrandsEditPage
