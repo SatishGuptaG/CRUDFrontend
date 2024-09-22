@@ -1,0 +1,18 @@
+/* App.css */
+.actions {
+  display: none; /* Hide icons by default */
+}
+
+.ag-row-hover .actions {
+  display: flex; /* Show icons on row hover */
+  gap: 10px; /* Space between icons */
+}
+
+.icon {
+  cursor: pointer; /* Change cursor to pointer */
+  color: #000; /* Default color */
+}
+
+.icon:hover {
+  color: #007bff; /* Color change on hover */
+}
