@@ -6,7 +6,8 @@ import DashboardBrandsPage from './pages/Dashboard/DashboardBrandsPage';
 import {
   DashboardBrandsEditPage,
   DashboardCategoriesPage,
-  DashboardCategoryEditPage
+  DashboardCategoryEditPage,
+  ProductPage,
 } from "./routes/dashboard";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +22,7 @@ function App() {
             <Route path="/brandDetail/:id" element={<DashboardBrandsEditPage />} />
             <Route path="/categories" element={<DashboardCategoriesPage />} />
             <Route path="/categoryDetail/:id" element={<DashboardCategoryEditPage />} />
+            <Route path="/Products" element={<ProductPage />} />
           </Routes>
         </header>
       </div>
