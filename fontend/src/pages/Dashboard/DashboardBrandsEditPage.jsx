@@ -1,5 +1,5 @@
 import React from 'react'
-import BrandEdit from '../../component/brand/BrandEdit'
+import BrandEdit from '../../components/Brand/BrandEdit'
 import DashboardSideBar from '../../components/Dashboard/DashboardSideBar'
 import DashboardHeader from '../../components/Dashboard/DashboardHeader'
 
@@ -14,8 +14,6 @@ const DashboardBrandsEditPage = () => {
            <div className="w-full justify-center flex">
            <BrandEdit />
            </div>
-
-       
          </div>
    </div>
   )
