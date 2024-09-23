@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-rou
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import DashboardBrandsPage from './pages/Dashboard/DashboardBrandsPage';
 import {
-  DashboardBrandsEditPage
+  DashboardBrandsEditPage,
+  DashboardCategoriesPage,
+  DashboardCategoryEditPage
 } from "./routes/dashboard";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -17,6 +19,8 @@ function App() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/brands" element={<DashboardBrandsPage />} />
             <Route path="/brandDetail/:id" element={<DashboardBrandsEditPage />} />
+            <Route path="/categories" element={<DashboardCategoriesPage />} />
+            <Route path="/categoryDetail/:id" element={<DashboardCategoryEditPage />} />
           </Routes>
         </header>
       </div>
