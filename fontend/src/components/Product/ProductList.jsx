@@ -57,8 +57,23 @@ const ProductList = () => {
       {
         headerName: "Active",
         field: "isActive",
-        sortable: true,
-        filter: true,
+        cellRenderer:(params)=>(
+          <div>
+            {params.data.isActive ?(
+              <span className="text-green-500">
+           Yes
+          </span>
+            ):(
+              <span className="text-yellow-500">
+           No
+          </span>
+            )
+         
+          }
+          </div>
+        )
+        // sortable: true,
+        // filter: true,
       },
     {
       headerName: "Actions",
