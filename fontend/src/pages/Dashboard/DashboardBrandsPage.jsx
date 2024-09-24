@@ -2,7 +2,7 @@
 import React from 'react';
 import DashboardHeader from '../../components/Dashboard/DashboardHeader'; // Adjust the path as needed
 import DashboardSideBar from '../../components/Dashboard/DashboardSideBar'; // Make sure to create this component
-import BrandList from '../../component/brand/BrandList';
+import BrandList from '../../components/Brand/BrandList';
 
 const DashboardBrandsPage = () => {
   return (
