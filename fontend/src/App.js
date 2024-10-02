@@ -9,6 +9,8 @@ import {
   DashboardCategoryEditPage,
   ProductPage,
   ProductEditPage,
+  CustomAttributesPage,
+  CustomAttributesEditPage,
 } from "./routes/dashboard";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -25,6 +27,8 @@ function App() {
             <Route path="/categoryDetail/:id" element={<DashboardCategoryEditPage />} />
             <Route path="/Products" element={<ProductPage />} />
             <Route path="/ProductDetail/:id" element={<ProductEditPage />} />
+            <Route path="/CustomAttributes" element={<CustomAttributesPage />} />
+            <Route path="/customAttributeDetail/:id" element={<CustomAttributesEditPage />} />
           </Routes>
         </header>
       </div>

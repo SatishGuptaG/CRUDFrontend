@@ -5,6 +5,7 @@ import { RxDashboard } from "react-icons/rx";
 import { CiSettings } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { BiCategoryAlt } from "react-icons/bi";
+import { MdOutlineSpaceDashboard } from "react-icons/md";
 const DashboardSideBar = ({ active }) => {
   return (
     <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
@@ -65,6 +66,22 @@ const DashboardSideBar = ({ active }) => {
             }`}
           >
             Product
+          </h5>
+        </Link>
+      </div>
+
+      <div className="w-full flex items-center p-4">
+        <Link to="/CustomAttributes" className="w-full flex items-center">
+          <MdOutlineSpaceDashboard
+            size={30}
+            color={`${active === 5 ? "crimson" : "#555"}`}
+          />
+          <h5
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
+              active === 5 ? "text-[crimson]" : "text-[#555]"
+            }`}
+          >
+            CustomAttribute
           </h5>
         </Link>
       </div>
