@@ -3,35 +3,39 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// Demo data for Brand and Category
-const brands = [
-  { id: "40d2b9ad-7b79-ef11-b6ab-8c16f6f17cd6", name: "Nikee" },
-  { id: "cebf2979-da78-ef11-b6ab-8c16f6f17cd6", name: "A1" },
-];
-
-const categories = [
-  { id: "3253ad5b-b178-ef11-b6ab-8c16f6f17cd6", name: "Circuit" },
-  { id: "d99a5b4e-b178-ef11-b6ab-8c16f6f17cd6", name: "Monitor" },
-  { id: "d89a5b4e-b178-ef11-b6ab-8c16f6f17cd6", name: "Driver" },
-  { id: "d79a5b4e-b178-ef11-b6ab-8c16f6f17cd6", name: "Sensor" },
-];
-
 const ProductEdit = () => {
   const { id } = useParams();
   const [name, setName] = useState("");
-  const [stockCode, setStockCode] = useState("");
+  const [stockCode, setStockCode] = useState(""); 
   const [price, setPrice] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [brandId, setBrandId] = useState("");
   const [gender, setGender] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const fetchCategory = async () => {
+    try {
+      const response = await axios.get("https://localhost:7059/api/List/category");
+      setCategories(response.data.result);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const fetchBrand = async () => {
+    try {
+      const response = await axios.get("https://localhost:7059/api/List/brand");
+      setBrands(response.data.result);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
+  };
 
   // Fetch product details for editing
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(
-        `https://localhost:7059/api/Product/${id}`
-      );
+      const response = await axios.get(`https://localhost:7059/api/Product/${id}`);
       if (response.data && response.data.result) {
         const product = response.data.result;
 
@@ -42,11 +46,13 @@ const ProductEdit = () => {
         setGender(product.gender);
         setIsActive(product.isActive);
 
-        // Find and set the brand and category ID based on their names
-        const bdId = brands.find((x) => x.name.toLowerCase() === product.brandName.toLowerCase())?.id || "";
-        setBrandId(bdId);
-        const catId = categories.find((x) => x.name.toLowerCase() === product.categoryName.toLowerCase())?.id || "";
-        setCategoryId(catId);
+        // Ensure brands and categories are loaded before setting IDs
+        if (brands.length && categories.length) {
+          const bdId = brands.find((x) => x.name.toLowerCase() === product.brandName.toLowerCase())?.id || "";
+          setBrandId(bdId);
+          const catId = categories.find((x) => x.name.toLowerCase() === product.categoryName.toLowerCase())?.id || "";
+          setCategoryId(catId);
+        }
       }
     } catch (err) {
       toast.error("Error fetching product data");
@@ -54,8 +60,21 @@ const ProductEdit = () => {
   };
 
   useEffect(() => {
-    fetchProduct();
-  }, [id]);
+    // Fetch categories and brands first
+    const fetchInitialData = async () => {
+      await fetchBrand();
+      await fetchCategory();
+    };
+
+    fetchInitialData();
+  }, []);
+
+  useEffect(() => {
+    // Once categories and brands are loaded, fetch the product
+    if (brands.length > 0 && categories.length > 0) {
+      fetchProduct();
+    }
+  }, [brands, categories]); // Wait for both categories and brands to load
 
   // Handle product update
   const handleUpdate = async (e) => {
@@ -75,7 +94,7 @@ const ProductEdit = () => {
 
       if (response.data.result.isValid) {
         toast.success(response.data.message);
-        fetchProduct(); // Refresh product data after update
+        await fetchProduct(); // Refresh product data after update
       } else {
         toast.error(response.data.message);
       }
@@ -173,6 +192,27 @@ const ProductEdit = () => {
           </select>
         </div>
         <br />
+
+        <div>
+          <label className="pb-2">
+            Gender <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={gender.toString()}
+            className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            onChange={(e) => setGender(e.target.value)}
+            required
+          >
+             <option value="" disabled>
+              Select Gender
+            </option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <br />
+
         <div>
           <label className="pb-2">
             Is Active <span className="text-red-500">*</span>
