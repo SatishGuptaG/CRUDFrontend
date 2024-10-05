@@ -14,7 +14,11 @@ const DashboardSideBar = ({ active }) => {
         <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
           <Link to="/" className="flex items-center group">
             <RxDashboard size={30} />
-            <span className={`ml-4 text-[16px] font-medium text-gray-800 hidden group-hover:inline-block ${active === 0 ? "text-[crimson]" : "text-[#555]"}`}>
+            <span
+              className={`ml-4 text-[16px] font-medium text-gray-800 hidden group-hover:inline-block ${
+                active === 0 ? "text-[crimson]" : "text-[#555]"
+              }`}
+            >
               Dashboard
             </span>
           </Link>
@@ -23,8 +27,15 @@ const DashboardSideBar = ({ active }) => {
         {/* Brands */}
         <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
           <Link to="/brands" className="flex items-center group">
-            <FiShoppingBag size={30} color={`${active === 1 ? "crimson" : "#555"}`} />
-            <span className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${active === 1 ? "text-[crimson]" : "text-[#555]"}`}>
+            <FiShoppingBag
+              size={30}
+              color={`${active === 1 ? "crimson" : "#555"}`}
+            />
+            <span
+              className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${
+                active === 1 ? "text-[crimson]" : "text-[#555]"
+              }`}
+            >
               Brands
             </span>
           </Link>
@@ -33,8 +44,15 @@ const DashboardSideBar = ({ active }) => {
         {/* Category */}
         <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
           <Link to="/categories" className="flex items-center group">
-            <BiCategoryAlt size={30} color={`${active === 3 ? "crimson" : "#555"}`} />
-            <span className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${active === 3 ? "text-[crimson]" : "text-[#555]"}`}>
+            <BiCategoryAlt
+              size={30}
+              color={`${active === 3 ? "crimson" : "#555"}`}
+            />
+            <span
+              className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${
+                active === 3 ? "text-[crimson]" : "text-[#555]"
+              }`}
+            >
               Category
             </span>
           </Link>
@@ -43,9 +61,33 @@ const DashboardSideBar = ({ active }) => {
         {/* Products */}
         <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
           <Link to="/products" className="flex items-center group">
-            <AiOutlineProduct size={30} color={`${active === 4 ? "crimson" : "#555"}`} />
-            <span className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${active === 4 ? "text-[crimson]" : "text-[#555]"}`}>
+            <AiOutlineProduct
+              size={30}
+              color={`${active === 4 ? "crimson" : "#555"}`}
+            />
+            <span
+              className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${
+                active === 4 ? "text-[crimson]" : "text-[#555]"
+              }`}
+            >
               Products
+            </span>
+          </Link>
+        </div>
+
+        {/* CustomAttribute */}
+        <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
+          <Link to="/CustomAttributes" className="flex items-center group">
+            <AiOutlineProduct
+              size={30}
+              color={`${active === 5 ? "crimson" : "#555"}`}
+            />
+            <span
+              className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${
+                active === 5 ? "text-[crimson]" : "text-[#555]"
+              }`}
+            >
+              CustomAttribute
             </span>
           </Link>
         </div>
@@ -53,8 +95,15 @@ const DashboardSideBar = ({ active }) => {
         {/* Settings */}
         <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
           <Link to="/settings" className="flex items-center group">
-            <CiSettings size={30} color={`${active === 11 ? "crimson" : "#555"}`} />
-            <span className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${active === 11 ? "text-[crimson]" : "text-[#555]"}`}>
+            <CiSettings
+              size={30}
+              color={`${active === 11 ? "crimson" : "#555"}`}
+            />
+            <span
+              className={`ml-4 text-[16px] font-medium hidden group-hover:inline-block ${
+                active === 11 ? "text-[crimson]" : "text-[#555]"
+              }`}
+            >
               Settings
             </span>
           </Link>
