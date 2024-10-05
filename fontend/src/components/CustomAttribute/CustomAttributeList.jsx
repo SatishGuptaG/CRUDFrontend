@@ -9,6 +9,7 @@ import { RxCross1 } from "react-icons/rx";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
+import { APIBASE_URL } from "../../Utils/Server";
 
 
 
@@ -48,7 +49,7 @@ const CustomAttributeList = () => {
   const fetchCustomAttributes = async () => {
     try {
       const response = await axios.get(
-        "https://localhost:7059/api/CustomAttribute?currentPage=1&pageSize=40"
+        `${APIBASE_URL}/api/CustomAttribute?currentPage=1&pageSize=40`
       );
       if (response.data && response.data.result) {
         setCustomAttributes(response.data.result);
@@ -75,7 +76,7 @@ const CustomAttributeList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://localhost:7059/api/CustomAttribute", {
+      const response = await axios.post(`${APIBASE_URL}/api/CustomAttribute`, {
         fieldCode,
         fieldName,
         inputType

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ProductInputType, ProductInputTypeNames } from "../../Utils/Enun/Enum";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import { APIBASE_URL } from "../../Utils/Server";
 
 const CustomAttributeView = () => {
   const { id } = useParams();
@@ -16,7 +17,7 @@ const CustomAttributeView = () => {
   const fetchCustomAttribute = async () => {
     try {
       const response = await axios.get(
-        `https://localhost:7059/api/CustomAttribute/${id}`
+        `${APIBASE_URL}/api/CustomAttribute/${id}`
       );
       if (response.data && response.data.result) {
         setFieldCode(response.data.result?.fieldCode);
@@ -71,7 +72,7 @@ const CustomAttributeView = () => {
 
     try {
       const response = await axios.put(
-        `https://localhost:7059/api/CustomAttribute`,
+        `${APIBASE_URL}/api/CustomAttribute`,
         updatedAttribute
       );
       if (response.data.statusCode === 200) {
