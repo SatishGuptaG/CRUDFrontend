@@ -4,12 +4,11 @@ import { FiShoppingBag } from "react-icons/fi";
 import { RxDashboard } from "react-icons/rx";
 import { CiSettings } from "react-icons/ci";
 import { BiCategoryAlt } from "react-icons/bi";
-import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const DashboardSideBar = ({ active }) => {
   return (
-    <div className="fixed top-16 left-0 h-full w-[80px] lg:w-[80px] group hover:w-[250px] transition-all duration-300 bg-white shadow-md z-100">
+    <div className="fixed top-16 left-0 h-full w-[80px] lg:w-[80px] group hover:w-[250px] transition-all duration-300 bg-white shadow-md ">
       <div className="w-full flex flex-col items-center py-6">
         {/* Dashboard */}
         <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
