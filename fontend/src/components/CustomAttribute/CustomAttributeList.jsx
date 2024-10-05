@@ -14,7 +14,6 @@ const CustomAttributeList = () => {
   const [fieldCode, setFieldCode] = useState("");
   const [fieldName, setFieldName] = useState("");
   const [inputType, setInputType] = useState("");
- // const [lastUpdated, setLastUpdated] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
