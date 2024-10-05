@@ -8,6 +8,9 @@ import { faEye, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { RxCross1 } from "react-icons/rx";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { LoadingSpinner } from "../Loader/LoadingSpinner";
+
+
 
 const CustomAttributeList = () => {
   const [customAttributes, setCustomAttributes] = useState([]);
@@ -92,7 +95,7 @@ const CustomAttributeList = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSpinner />; // Show loading spinner
   if (error) return <div>{error}</div>;
 
   return (
