@@ -4,6 +4,7 @@ import { FiShoppingBag } from "react-icons/fi";
 import { RxDashboard } from "react-icons/rx";
 import { CiSettings } from "react-icons/ci";
 import { BiCategoryAlt } from "react-icons/bi";
+import { MdOutlineEditAttributes } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const DashboardSideBar = ({ active }) => {
@@ -78,7 +79,7 @@ const DashboardSideBar = ({ active }) => {
         {/* CustomAttribute */}
         <div className="w-full flex items-center p-4 hover:bg-gray-100 transition">
           <Link to="/CustomAttributes" className="flex items-center group">
-            <AiOutlineProduct
+            <MdOutlineEditAttributes
               size={30}
               color={`${active === 5 ? "crimson" : "#555"}`}
             />
