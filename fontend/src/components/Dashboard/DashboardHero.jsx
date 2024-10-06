@@ -12,8 +12,10 @@ const DashboardHero = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="p-20 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-semibold">Welcome to the Dashboard!</h2>
+    <div className="p-20 bg-white dark:bg-gray-800 shadow-md rounded-md">
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-200">
+        Welcome to the Dashboard!
+      </h2>
       {/* Add more hero section content like charts, stats, etc. */}
     </div>
   );
