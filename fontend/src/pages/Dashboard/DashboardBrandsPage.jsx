@@ -17,7 +17,7 @@ const DashboardBrandsPage = () => {
       </div>
       {/* Main Section */}
       <div className="ml-[80px] lg:ml-[60px] mt-16 flex-1 p-6 bg-gray-100 dark:bg-gray-900 h-screen overflow-auto">
-        <BrandList/>
+        <BrandList darkMode={darkMode}/>
       </div>
     </div>
   );
