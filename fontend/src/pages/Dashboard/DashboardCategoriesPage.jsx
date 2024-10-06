@@ -13,7 +13,7 @@ const DashboardCategoriesPage = () => {
 
       {/* Fixed Sidebar */}
       <div className="fixed top-16 left-0">
-        <DashboardSideBar active={0} />
+        <DashboardSideBar active={3} />
       </div>
 
       {/* Main Section */}

@@ -24,14 +24,16 @@ const DashboardSideBar = ({ active }) => {
       } transition-all duration-300 bg-white shadow-md`}
     >
       <div className="w-full flex flex-col items-center py-6">
-        {/* Dashboard */}
+        {/* Dashboard 0*/}
         <div
           className="w-full flex items-center p-4 hover:bg-gray-100 transition relative"
           onMouseEnter={() => setHovered("dashboard")}
           onMouseLeave={() => setHovered(null)}
         >
           <Link to="/" className="flex items-center">
-            <RxDashboard size={30} />
+            <RxDashboard size={30} 
+            color={`${active === 0 ? "crimson" : "#555"}`}
+            />
             {isExpanded && (
               <span
                 className={`ml-4 text-[16px] font-medium text-gray-800 ${
@@ -50,7 +52,7 @@ const DashboardSideBar = ({ active }) => {
           )}
         </div>
 
-        {/* Brands */}
+        {/* Brands 1*/}
         <div
           className="w-full flex items-center p-4 hover:bg-gray-100 transition relative"
           onMouseEnter={() => setHovered("brands")}
@@ -79,7 +81,7 @@ const DashboardSideBar = ({ active }) => {
           )}
         </div>
 
-        {/* Category */}
+        {/* Category 3*/}
         <div
           className="w-full flex items-center p-4 hover:bg-gray-100 transition relative"
           onMouseEnter={() => setHovered("category")}
@@ -100,7 +102,7 @@ const DashboardSideBar = ({ active }) => {
               </span>
             )}
           </Link>
-          {/* Show name on hover */}
+          {/* Show name on hover 4*/}
           {!isExpanded && hovered === "category" && (
             <div className="absolute left-[80px] w-[100px] bg-white shadow-lg p-2 rounded-md">
               <h4 className="font-bold">Category</h4>
@@ -137,7 +139,7 @@ const DashboardSideBar = ({ active }) => {
           )}
         </div>
 
-        {/* CustomAttribute */}
+        {/* CustomAttribute 5*/}
         <div
           className="w-full flex items-center p-4 hover:bg-gray-100 transition relative"
           onMouseEnter={() => setHovered("customAttribute")}
@@ -166,7 +168,7 @@ const DashboardSideBar = ({ active }) => {
           )}
         </div>
 
-        {/* Settings */}
+        {/* Settings 30*/}
         <div
           className="w-full flex items-center p-4 hover:bg-gray-100 transition relative"
           onMouseEnter={() => setHovered("settings")}
