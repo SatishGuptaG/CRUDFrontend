@@ -3,7 +3,7 @@ import DashboardHeader from '../../components/Dashboard/DashboardHeader'
 import DashboardSideBar from '../../components/Dashboard/DashboardSideBar'
 import Settings from '../../components/Setting/Settings'
 
-const Setting = () => {
+const SettingPage = () => {
   return (
     <div className="flex h-screen">
     {/* Fixed Header */}
@@ -22,4 +22,4 @@ const Setting = () => {
   )
 }
 
-export default Setting
+export default SettingPage
