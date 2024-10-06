@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../Loader/LoadingSpinner"; // Assuming you have a loading spinner component
 
-const BrandList = () => {
+const BrandList = ({darkMode}) => {
   const [open, setOpen] = useState(false);
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -108,7 +108,7 @@ const BrandList = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
+    <div className={`${darkMode ?'ag-theme-alpine-dark':'ag-theme-alpine'}`} style={{ height: 400, width: "100%" }}>
       <h2 className="text-2xl font-bold mb-4">Brand List</h2>
       
       <div className="flex justify-end mb-4">
