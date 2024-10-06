@@ -25,3 +25,9 @@
 .icon:hover {
   color: #007bff; /* Color change on hover */
 }
+
+/* This Is Only Use SideBar Top for all */
+.fixed {
+  position: fixed;
+  z-index: 1000;
+}

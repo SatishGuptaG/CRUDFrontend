@@ -5,15 +5,20 @@ import ProductList from '../../components/Product/ProductList'
 
 const ProductPage = () => {
   return (
-    <div>
-       <DashboardHeader />
-       <div className="flex items-start justify-between w-full">
-              <div className="w-[80px] 800px:w-[330px]">
-                <DashboardSideBar active={4} />
-              </div>
-              <ProductList/>
-            </div>
+    <div className="flex h-screen">
+    {/* Fixed Header */}
+    <DashboardHeader />
+    
+    {/* Fixed Sidebar */}
+    <div className="fixed top-16 left-0">
+      <DashboardSideBar active={0} />
+    </div>
+    
+    {/* Main Section */}
+    <div className="ml-[80px] lg:ml-[60px] mt-16 flex-1 p-6 bg-gray-100 h-screen overflow-auto">
+        <ProductList />
       </div>
+  </div>
   )
 }
 

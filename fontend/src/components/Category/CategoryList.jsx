@@ -97,9 +97,9 @@ const CategoryList = () => {
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
       <h2>Category List</h2>
-      <div className="w-full flex justify-end">
+      <div className="flex justify-end mb-4">
         <div
-          className="w-[150px] bg-black h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer"
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
           onClick={() => setOpen(true)}
         >
           <span className="text-white">Create Category</span>
