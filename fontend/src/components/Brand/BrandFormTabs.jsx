@@ -122,7 +122,7 @@ const BrandFormTabs = () => {
                         </Tab.Panels>
 
                         {/* Save Button */}
-                        <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-10 py-4 flex justify-end z-0">
+                        <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 px-10 py-4 flex justify-end !z-10">
                             <button
                                 onClick={handleSubmit}
                                 className="bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200 ease-in-out"
