@@ -20,7 +20,8 @@ const BrandFormTabs = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     name: "",
-    logo: null,
+    logo: null, // This will store the logo file
+    logoPreview: null, // This will store the preview URL or base64 string
     description: "",
     shortDescription: "",
     images: [],
@@ -30,22 +31,27 @@ const BrandFormTabs = () => {
       isFeatured: false,
     },
   });
+
   const fetchBrand = async () => {
     try {
-      const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
-      if (response.data && response.data.result) {
-        const brand = response.data.result;
-        const brandjson = {
-          name: brand.name,
-          description: brand.description,
-          shortDescription: brand.shortDescription,
-          flags: {
-            isActive: false,
-            isFeatured: false,
-          },
-        };
-        setFormData(brandjson);
-      }
+      //const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
+      const response = await axios.get(`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`);
+    //   if (response.data && response.data.result) {
+    //     const brand = response.data.result;
+    //     const brandjson = {
+    //       name: brand.name,
+    //       description: brand.description,
+    //       shortDescription: brand.shortDescription,
+    //       logoPreview:
+    //         "https://res.cloudinary.com/dzabikj6s/image/upload/v1727525471/manjit/test-738r423.jpg", // Store URL for preview
+    //       flags: {
+    //         isActive: false,
+    //         isFeatured: false,
+    //       },
+    //     };
+    //     setFormData(brandjson);
+        setFormData(response.data);
+     // }
     } catch (err) {
       toast.error("Error fetching brand data");
     }
@@ -62,6 +68,21 @@ const BrandFormTabs = () => {
     }));
   };
 
+  const handleLogoChange = (file) => {
+    if (file) {
+      // Create a FileReader to generate the base64 string for preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          logo: file, // Store the actual file
+          logoPreview: reader.result, // Store the base64 string for preview
+        }));
+      };
+      reader.readAsDataURL(file); // Convert the file to base64
+    }
+  };
+
   const handleFlagsChange = (flag, value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -76,15 +97,15 @@ const BrandFormTabs = () => {
     // Submit form logic goes here
     console.log("Form submitted:", formData);
     try {
-      const response = axios.post(
-        `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand`,
+      const response = axios.put(
+        `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`,
         formData
       );
       if (response.data) {
         console.log(response.data);
       }
     } catch (err) {
-      //toast.error("Error fetching custom attribute data");
+      toast.error("Error submitting brand data");
     }
   };
 
@@ -102,11 +123,11 @@ const BrandFormTabs = () => {
                   key={tab.id}
                   className={({ selected }) =>
                     `py-3 px-4 flex items-center cursor-pointer outline-none transition-colors duration-200 ease-in-out 
-                                    ${
-                                      selected
-                                        ? "bg-blue-800 text-white font-semibold"
-                                        : "text-gray-700 hover:text-blue-800 hover:bg-gray-100"
-                                    }`
+                    ${
+                      selected
+                        ? "bg-blue-800 text-white font-semibold"
+                        : "text-gray-700 hover:text-blue-800 hover:bg-gray-100"
+                    }`
                   }
                 >
                   {({ selected }) => (
@@ -130,9 +151,9 @@ const BrandFormTabs = () => {
           {/* Header */}
           <div className="px-10 py-6 border-b border-gray-200 flex items-center space-x-4">
             {/* Logo */}
-            {formData.logo && (
+            {formData.logoPreview && (
               <img
-                src={formData.logo} // Assuming `formData.logo` contains the image URL
+                src={formData.logoPreview} // Use logoPreview for displaying image
                 alt="Brand Logo"
                 className="w-12 h-12 object-cover rounded-full"
               />
@@ -153,9 +174,9 @@ const BrandFormTabs = () => {
               <Tab.Panel>
                 <BasicInfo
                   name={formData.name}
-                  logo={formData.logo}
+                  logo={formData.logoPreview} // Pass logoPreview here for rendering the preview
                   onInputChange={(value) => handleInputChange("name", value)}
-                  onLogoChange={(file) => handleInputChange("logo", file)}
+                  onLogoChange={handleLogoChange} // Pass handleLogoChange for file input
                 />
               </Tab.Panel>
               <Tab.Panel>
