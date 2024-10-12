@@ -7,6 +7,7 @@ import ProductEditPage from "../pages/Dashboard/ProductEditPage";
 import CustomAttributesPage from "../pages/Dashboard/CustomAttributesPage";
 import CustomAttributesEditPage from "../pages/Dashboard/CustomAttributesEditPage";
 import SettingPage from "../pages/Dashboard/Setting";
+import BrandPage from "../pages/Dashboard/BrandPage";
 export {
  
     DashboardBrandsEditPage,
@@ -17,4 +18,5 @@ export {
     ProductPage,
     ProductEditPage,
     SettingPage,
+    BrandPage
 };
