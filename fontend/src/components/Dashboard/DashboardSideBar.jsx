@@ -192,8 +192,10 @@ const DashboardSideBar = ({ active, darkMode }) => {
           </Link>
           {/* Show name on hover */}
           {!isExpanded && hovered === "settings" && (
-            <div className="absolute left-[80px] w-[100px] bg-white shadow-lg p-2 rounded-md">
-              <h4 className="font-bold">Settings</h4>
+            <div className="absolute left-[80px] w-auto bg-white shadow-lg p-2 rounded-md">
+              <button className="font-bold">Settings</button>
+              <hr />
+              <button className="font-bold">CustonattributeSet</button>
             </div>
           )}
         </div>
