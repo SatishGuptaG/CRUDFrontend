@@ -4,6 +4,7 @@ import BasicInfo from './BasicInfo';
 import Description from './Description';
 import ImagesVideos from './ImagesVideos';
 import Configuration from './Configuration';
+import axios from 'axios';
 
 const BRAND_MENU_TABS = [
   { id: 1, title: "Basic Information", iconClass: "icon-basic" },
@@ -46,6 +47,17 @@ const BrandFormTabs = () => {
     const handleSubmit = () => {
         // Submit form logic goes here
         console.log("Form submitted:", formData);
+       try{
+        const response =  axios.post(
+            `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand`,
+            formData
+          );
+          if (response.data) {
+          console.log(response.data)
+          }
+        } catch (err) {
+          //toast.error("Error fetching custom attribute data");
+        }
     };
 
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
