@@ -3,7 +3,7 @@ import DashboardHeader from '../../components/Dashboard/DashboardHeader'
 import DashboardSideBar from '../../components/Dashboard/DashboardSideBar'
 import BrandFormTabs from '../../components/Brand/BrandFormTabs'
 
-const BrandPage = () => {
+const BrandDetailPage = () => {
   return (
     <div className="flex h-screen">
     {/* Fixed Header */}
@@ -23,4 +23,4 @@ const BrandPage = () => {
   )
 }
 
-export default BrandPage
+export default BrandDetailPage

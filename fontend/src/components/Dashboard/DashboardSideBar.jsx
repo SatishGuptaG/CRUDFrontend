@@ -197,34 +197,6 @@ const DashboardSideBar = ({ active, darkMode }) => {
             </div>
           )}
         </div>
-         {/* BrandPage 12 */}
-         <div
-          className={`w-full flex items-center p-4 hover:bg-gray-100 transition relative ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
-          onMouseEnter={() => setHovered("settings")}
-          onMouseLeave={() => setHovered(null)}
-        >
-          <Link to="/BrandPage" className="flex items-center">
-            <CiSettings
-              size={30}
-              color={`${active === 12 ? "crimson" : darkMode ? "#fff" : "#555"}`}
-            />
-            {isExpanded && (
-              <span
-                className={`ml-4 text-[16px] font-medium ${darkMode ? 'text-gray-200' : 'text-gray-800'} ${
-                  active === 12 ? "text-[crimson]" : darkMode ? 'text-gray-400' : 'text-[#555]'
-                }`}
-              >
-                BrandPAge
-              </span>
-            )}
-          </Link>
-          {/* Show name on hover */}
-          {!isExpanded && hovered === "BrandPage" && (
-            <div className="absolute left-[80px] w-[100px] bg-white shadow-lg p-2 rounded-md">
-              <h4 className="font-bold">BrandPAge</h4>
-            </div>
-          )}
-        </div>
       </div>
 
       

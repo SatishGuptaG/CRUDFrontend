@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-rou
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import DashboardBrandsPage from './pages/Dashboard/DashboardBrandsPage';
 import {
-  DashboardBrandsEditPage,
+  
   DashboardCategoriesPage,
   DashboardCategoryEditPage,
   ProductPage,
@@ -12,7 +12,8 @@ import {
   CustomAttributesPage,
   CustomAttributesEditPage,
   SettingPage,
-  BrandPage,
+  BrandDetailPage
+
 } from "./routes/dashboard";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -24,7 +25,7 @@ function App() {
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/brands" element={<DashboardBrandsPage />} />
-            <Route path="/brandDetail/:id" element={<DashboardBrandsEditPage />} />
+            <Route path="/brandDetail/:id" element={<BrandDetailPage />} />
             <Route path="/categories" element={<DashboardCategoriesPage />} />
             <Route path="/categoryDetail/:id" element={<DashboardCategoryEditPage />} />
             <Route path="/Products" element={<ProductPage />} />
@@ -32,7 +33,7 @@ function App() {
             <Route path="/CustomAttributes" element={<CustomAttributesPage />} />
             <Route path="/customAttributeDetail/:id" element={<CustomAttributesEditPage />} />
             <Route path="/settings" element={<SettingPage />} />
-            <Route path="/BrandPage" element={<BrandPage />} />
+          
           </Routes>
         </header>
       </div>
