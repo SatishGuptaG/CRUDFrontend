@@ -12,6 +12,7 @@ const ImagesVideos = ({ images, videos, onImagesChange, onVideosChange }) => {
                 const newImage = {
                     name: file.name,
                     base64: reader.result,
+                    url: file.Url,
                     displayOrder: index + 1,
                     description: `Image ${index + 1}`,
                 };
@@ -72,7 +73,7 @@ const ImagesVideos = ({ images, videos, onImagesChange, onVideosChange }) => {
                     {imageDetails.map((image, index) => (
                         <div key={index} className="relative group">
                             <img
-                                src={image.base64}
+                                src={image.url}
                                 alt={image.name}
                                 className="h-24 w-full object-cover rounded-lg shadow-md"
                             />
