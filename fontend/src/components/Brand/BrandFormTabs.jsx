@@ -94,12 +94,25 @@ const BrandFormTabs = () => {
   };
 
   const handleSubmit = () => {
+      // Prepare the form data by removing the base64 prefix from images and logoPreview
+  const processedFormData = {
+    ...formData,
+    images: formData.images.map((image) => ({
+      ...image,
+      base64: image.base64.replace(/^data:image\/[a-z]+;base64,/, ""),
+    })),
+    logoPreview: formData.logoPreview
+      ? formData.logoPreview.replace(/^data:image\/[a-z]+;base64,/, "")
+      : null, // Only process if logoPreview exists
+  };
+
+  console.log("Processed Form Data:", processedFormData);
     // Submit form logic goes here
     console.log("Form submitted:", formData);
     try {
       const response = axios.put(
         `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`,
-        formData
+        processedFormData
       );
       if (response.data) {
         console.log(response.data);
