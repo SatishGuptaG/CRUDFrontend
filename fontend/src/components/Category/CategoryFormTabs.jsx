@@ -19,11 +19,11 @@ const CATEGORY_MENU_TABS = [
 const CategoryFormTabs = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
-    id:id,
+    id: id,
     name: "",
-    code:"",
-    logo: null, // This will store the logo file
-    logoPreview: null, // This will store the preview URL or base64 string
+    code: "",
+    logoUrl: null, // This will store the logo file
+    logoBase64: null, // This will store the preview URL or base64 string
     description: "",
     shortDescription: "",
     images: [],
@@ -34,34 +34,36 @@ const CategoryFormTabs = () => {
     },
   });
 
-  const fetchBrand = async () => {
+  const fetchCategory = async () => {
     try {
-      const response = await axios.get(`${APIBASE_URL}/api/Category/${id}`);
-      //const response = await axios.get(`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`);
-      if (response.data && response.data.result) {
-        const brand = response.data.result;
-        const brandjson = {
-          name: brand.name,
-          code:brand.code,
-          description: brand.description,
-          shortDescription: brand.shortDescription,
-          logoPreview:brand.logoUrl,
-          flags: {
-            isActive: false,
-            isFeatured: false,
-          },
-          images:brand.images
-        };
-        setFormData(brandjson);
-       // setFormData(response.data.result);
-      }
+      //const response = await axios.get(`${APIBASE_URL}/api/Category/${id}`);
+      const response = await axios.get(
+        `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`
+      );
+      // if (response.data && response.data.result) {
+      //   const brand = response.data.result;
+      //   const brandjson = {
+      //     name: brand.name,
+      //     code:brand.code,
+      //     description: brand.description,
+      //     shortDescription: brand.shortDescription,
+      //     logoBase64:brand.logoUrl,
+      //     flags: {
+      //       isActive: false,
+      //       isFeatured: false,
+      //     },
+      //     images:brand.images
+      //   };
+      //   setFormData(brandjson);
+      setFormData(response.data);
+      //}
     } catch (err) {
       toast.error("Error fetching brand data");
     }
   };
 
   useEffect(() => {
-    fetchBrand();
+    fetchCategory();
   }, [id]);
 
   const handleInputChange = (section, value) => {
@@ -79,7 +81,7 @@ const CategoryFormTabs = () => {
         setFormData((prevData) => ({
           ...prevData,
           logo: file, // Store the actual file
-          logoPreview: reader.result, // Store the base64 string for preview
+          logoBase64: reader.result, // Store the base64 string for preview
         }));
       };
       reader.readAsDataURL(file); // Convert the file to base64
@@ -97,25 +99,25 @@ const CategoryFormTabs = () => {
   };
 
   const handleSubmit = () => {
-  //     // Prepare the form data by removing the base64 prefix from images and logoPreview
-  // const processedFormData = {
-  //   ...formData,
-  //   images: formData.images.map((image) => ({
-  //     ...image,
-  //     base64: image.base64.replace(/^data:image\/[a-z]+;base64,/, ""),
-  //   })),
-  //   logoPreview: formData.logoPreview
-  //     ? formData.logoPreview.replace(/^data:image\/[a-z]+;base64,/, "")
-  //     : null, // Only process if logoPreview exists
-  // };
+    //     // Prepare the form data by removing the base64 prefix from images and logoBase64
+    // const processedFormData = {
+    //   ...formData,
+    //   images: formData.images.map((image) => ({
+    //     ...image,
+    //     base64: image.base64.replace(/^data:image\/[a-z]+;base64,/, ""),
+    //   })),
+    //   logoBase64: formData.logoBase64
+    //     ? formData.logoBase64.replace(/^data:image\/[a-z]+;base64,/, "")
+    //     : null, // Only process if logoBase64 exists
+    // };
 
-  //console.log("Processed Form Data:", processedFormData);
+    //console.log("Processed Form Data:", processedFormData);
     // Submit form logic goes here
     console.log("Form submitted:", formData);
     try {
       const response = axios.put(
-        `${APIBASE_URL}/api/Category`,
-        //`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
+        // `${APIBASE_URL}/api/Category`,
+        `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
         formData
       );
       if (response.data) {
@@ -168,12 +170,16 @@ const CategoryFormTabs = () => {
           {/* Header */}
           <div className="px-10 py-6 border-b border-gray-200 flex items-center space-x-4">
             {/* Logo */}
-            {formData.logoPreview && (
+            {formData.logoBase64 || formData.logoUrl ? (
               <img
-                src={formData.logoPreview} // Use logoPreview for displaying image
-                alt="Brand Logo"
+                src={formData.logoBase64 || formData.logoUrl} // Use logoBase64 if available, otherwise use logoUrl
+                alt="Category Logo"
                 className="w-12 h-12 object-cover rounded-full"
               />
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                <span>No Logo</span>
+              </div>
             )}
             <div>
               <h1 className="text-xl font-semibold text-gray-800">
@@ -192,7 +198,7 @@ const CategoryFormTabs = () => {
                 <CategoryBasicInfo
                   name={formData.name}
                   code={formData.code}
-                  logo={formData.logoPreview} // Pass logoPreview here for rendering the preview
+                  logo={formData.logoBase64 || formData.logoUrl} // Pass logoBase64 here for rendering the preview
                   onInputChange={(value) => handleInputChange("name", value)}
                   onLogoChange={handleLogoChange} // Pass handleLogoChange for file input
                 />
