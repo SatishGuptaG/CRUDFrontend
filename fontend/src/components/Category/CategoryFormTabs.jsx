@@ -36,27 +36,27 @@ const CategoryFormTabs = () => {
 
   const fetchCategory = async () => {
     try {
-      //const response = await axios.get(`${APIBASE_URL}/api/Category/${id}`);
-      const response = await axios.get(
-        `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`
-      );
-      // if (response.data && response.data.result) {
-      //   const brand = response.data.result;
-      //   const brandjson = {
-      //     name: brand.name,
-      //     code:brand.code,
-      //     description: brand.description,
-      //     shortDescription: brand.shortDescription,
-      //     logoBase64:brand.logoUrl,
-      //     flags: {
-      //       isActive: false,
-      //       isFeatured: false,
-      //     },
-      //     images:brand.images
-      //   };
-      //   setFormData(brandjson);
-      setFormData(response.data);
-      //}
+      const response = await axios.get(`${APIBASE_URL}/api/Category/${id}`);
+      // const response = await axios.get(
+      //   `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`
+      // );
+      if (response.data && response.data.result) {
+        const brand = response.data.result;
+        const brandjson = {
+          name: brand.name,
+          code:brand.code,
+          description: brand.description,
+          shortDescription: brand.shortDescription,
+          logoUrl:brand.logoUrl,
+          flags: {
+            isActive: false,
+            isFeatured: false,
+          },
+          images:brand.images
+        };
+        setFormData(brandjson);
+      //setFormData(response.data);
+      }
     } catch (err) {
       toast.error("Error fetching brand data");
     }
@@ -98,7 +98,7 @@ const CategoryFormTabs = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     //     // Prepare the form data by removing the base64 prefix from images and logoBase64
     // const processedFormData = {
     //   ...formData,
@@ -116,15 +116,21 @@ const CategoryFormTabs = () => {
     console.log("Form submitted:", formData);
     try {
       const response = axios.put(
-        // `${APIBASE_URL}/api/Category`,
-        `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
+         `${APIBASE_URL}/api/Category`,
+        //`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
         formData
       );
-      if (response.data) {
-        console.log(response.data);
+      console.log(response.data.result.isValid);
+      if (response.data.result.isValid) {
+        //console.log(response.data);
+        toast.success(response.data.result.message);
+        await fetchCategory(); // Refresh product data after update
+      }else
+      {
+        toast.error(response.data.result.message);
       }
     } catch (err) {
-      toast.error("Error submitting brand data");
+      toast.error("Error submitting category data");
     }
   };
 
