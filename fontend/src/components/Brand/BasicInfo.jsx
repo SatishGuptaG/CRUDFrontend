@@ -5,7 +5,7 @@ const BasicInfo = ({ name, logo, onInputChange, onLogoChange }) => {
     <div className="space-y-6">
       {/* Name Input */}
       <div>
-        <label className="block text-gray-700 text-sm font-medium mb-2">Brand Name</label>
+        <label className="block text-gray-700 text-sm font-medium mb-2">Name</label>
         <input
           type="text"
           value={name}
@@ -17,7 +17,7 @@ const BasicInfo = ({ name, logo, onInputChange, onLogoChange }) => {
 
       {/* Logo Upload */}
       <div>
-        <label className="block text-gray-700 text-sm font-medium mb-2">Brand Logo</label>
+        <label className="block text-gray-700 text-sm font-medium mb-2">Logo</label>
         <input
           type="file"
           onChange={(e) => onLogoChange(e.target.files[0])}
