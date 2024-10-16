@@ -34,8 +34,9 @@ const BrandFormTabs = () => {
 
   const fetchBrand = async () => {
     try {
-      //const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
       const response = await axios.get(`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`);
+
+      //const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
     //   if (response.data && response.data.result) {
     //     const brand = response.data.result;
     //     const brandjson = {
@@ -50,8 +51,8 @@ const BrandFormTabs = () => {
     //       },
     //     };
     //     setFormData(brandjson);
-        setFormData(response.data);
      // }
+     setFormData(response.data);
     } catch (err) {
       toast.error("Error fetching brand data");
     }
