@@ -49,8 +49,8 @@ const CategoryFormTabs = () => {
           shortDescription: brand.shortDescription,
           logoUrl:brand.logoUrl,
           flags: {
-            isActive: false,
-            isFeatured: false,
+            isActive: brand.flags.isActive,
+            isFeatured: brand.flags.isFeatured,
           },
           images:brand.images
         };
@@ -115,8 +115,8 @@ const CategoryFormTabs = () => {
     // Submit form logic goes here
     console.log("Form submitted:", formData);
     try {
-      const response = axios.put(
-         `${APIBASE_URL}/api/Category`,
+      const response = await axios.put(
+         `${APIBASE_URL}/api/Category/${id}`,
         //`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
         formData
       );
