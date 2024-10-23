@@ -7,6 +7,7 @@ import CustomAttributesEditPage from "../pages/Dashboard/CustomAttributesEditPag
 import SettingPage from "../pages/Dashboard/Setting";
 import BrandDetailPage from "../pages/Dashboard/BrandDetailPage";
 import CategoryDetailPage from "../pages/Dashboard/CategoryDetailPage";
+import AssetManagerPage from "../pages/Dashboard/AssetManagerPage";
 export {
  
     
@@ -19,4 +20,6 @@ export {
     SettingPage,
     BrandDetailPage,
     CategoryDetailPage,
+    AssetManagerPage,
+
 };

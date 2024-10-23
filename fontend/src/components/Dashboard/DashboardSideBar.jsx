@@ -7,6 +7,8 @@ import { BiCategoryAlt } from "react-icons/bi";
 import { MdOutlineEditAttributes } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa"; // Add arrow icons
+import { IoFileTrayStackedOutline } from "react-icons/io5";
+
 
 const DashboardSideBar = ({ active, darkMode }) => {
   const [hovered, setHovered] = useState(null); // State to track hovered icon
@@ -165,6 +167,34 @@ const DashboardSideBar = ({ active, darkMode }) => {
           {!isExpanded && hovered === "customAttribute" && (
             <div className="absolute left-[80px] w-[100px] bg-white shadow-lg p-2 rounded-md">
               <h4 className="font-bold">Custom Attribute</h4>
+            </div>
+          )}
+        </div>
+         {/* AssetManager 6 */}
+         <div
+          className={`w-full flex items-center p-4 hover:bg-gray-100 transition relative ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+          onMouseEnter={() => setHovered("asset")}
+          onMouseLeave={() => setHovered(null)}
+        >
+          <Link to="/asset" className="flex items-center">
+            <IoFileTrayStackedOutline 
+              size={30}
+              color={`${active === 6 ? "crimson" : darkMode ? "#fff" : "#555"}`}
+            />
+            {isExpanded && (
+              <span
+                className={`ml-4 text-[16px] font-medium ${darkMode ? 'text-gray-200' : 'text-gray-800'} ${
+                  active === 6 ? "text-[crimson]" : darkMode ? 'text-gray-400' : 'text-[#555]'
+                }`}
+              >
+                Asset Manager
+              </span>
+            )}
+          </Link>
+          {/* Show name on hover */}
+          {!isExpanded && hovered === "asset" && (
+            <div className="absolute left-[80px] w-[100px] bg-white shadow-lg p-2 rounded-md">
+              <h4 className="font-bold">Asset Manager</h4>
             </div>
           )}
         </div>
