@@ -35,25 +35,25 @@ const BrandFormTabs = () => {
 
   const fetchBrand = async () => {
     try {
-      const response = await axios.get(`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/19`);
-setFormData(response.data);
-    //   const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
-    //   if (response.data && response.data.result) {
-    //     const brand = response.data.result;
-    //     const brandjson = {
-    //       name: brand.name,
-    //       description: brand.description,
-    //       logoName: "manish",
-    //       shortDescription: brand.shortDescription,
-    //       logoUrl:brand.logoUrl,
-    //       flags: {
-    //         isActive: brand.flags.isActive,
-    //         isFeatured: brand.flags.isFeatured,
-    //       },
-    //       images:brand.images
-    //     };
-    //     setFormData(brandjson);
-    //  }
+      //const response = await axios.get(`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/19`);
+//setFormData(response.data);
+      const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
+      if (response.data && response.data.result) {
+        const brand = response.data.result;
+        const brandjson = {
+          name: brand.name,
+          description: brand.description,
+          logoName: "manish",
+          shortDescription: brand.shortDescription,
+          logoUrl:brand.logoUrl,
+          flags: {
+            isActive: brand.flags.isActive,
+            isFeatured: brand.flags.isFeatured,
+          },
+          images:brand.images
+        };
+        setFormData(brandjson);
+     }
      
     } catch (err) {
       toast.error("Error fetching brand data");
@@ -121,18 +121,18 @@ const handleLogoNameChange = (name) => {
   //console.log("Processed Form Data:", processedFormData);
     // Submit form logic goes here
     console.log("Form submitted:", formData);
-    // try {
-    //   const response = axios.put(
-    //     `${APIBASE_URL}/api/Brand/${id}`,
-    //    // `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`,
-    //    formData
-    //   );
-    //   if (response.data) {
-    //     console.log(response.data);
-    //   }
-    // } catch (err) {
-    //   toast.error("Error submitting brand data");
-    // }
+    try {
+      const response = axios.put(
+        `${APIBASE_URL}/api/Brand/${id}`,
+       // `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`,
+       formData
+      );
+      if (response.data) {
+        console.log(response.data);
+      }
+    } catch (err) {
+      toast.error("Error submitting brand data");
+    }
   };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
