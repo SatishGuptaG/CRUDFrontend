@@ -1,8 +1,15 @@
 import React, { useState } from "react";
+import AssetManagerModal from "../AssetManager/AssetManagerModal";
 
 const ImagesVideos = ({ images, videos, onImagesChange, onVideosChange }) => {
   const [imageDetails, setImageDetails] = useState(images || []);
   const [videoDetails, setVideoDetails] = useState(videos || []);
+  const [showModal, setShowModal] = useState(false); // Modal state
+
+  // Handle showing the modal with file details
+  const handleShowAssetManager = () => {
+    setShowModal(true); // Show the modal
+  };
 
   // Function to handle image upload and convert to base64
   const handleImageUpload = (files) => {
@@ -130,6 +137,19 @@ const ImagesVideos = ({ images, videos, onImagesChange, onVideosChange }) => {
           ))}
         </div>
       </div>
+        {/* Button to Open Asset Manager Modal */}
+      <div>
+        <button
+          onClick={handleShowAssetManager}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add From Asset Manager
+        </button>
+      </div>
+      <div>hell</div>
+
+      {/* Modal to show file details */}
+      {showModal && <AssetManagerModal onClose={() => setShowModal(false)} />}
     </div>
   );
 };

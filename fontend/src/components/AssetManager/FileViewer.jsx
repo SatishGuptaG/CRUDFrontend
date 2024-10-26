@@ -17,7 +17,7 @@ import {
   const maxsize = 6;
   let nextCursor = null;
   
-  const FileViewer = ({ selectedFolder }) => {
+  const FileViewer = ({ selectedFolder,onFileSelect  }) => {
     const [files, setFiles] = useState([]);
     const [selectedFile, setSelectedFile] = useState(null); // State for selected image file
     const [isUploading, setIsUploading] = useState(false); // Uploading state
@@ -204,6 +204,8 @@ import {
       try {
         const details = await getFileDetailsByAssetId(assetId); // Fetch file details by asset_id
         setFileDetails(details.data); // Store the details for the modal
+        if(onFileSelect!=null)
+        onFileSelect(details.data); // Pass details to parent (AssetManager)
         setShowModal(true); // Show the modal
       } catch (error) {
         console.error("Error fetching file details:", error);
@@ -275,6 +277,7 @@ import {
               {files.map((file) => (
                 <div
                   key={file.asset_id}
+                 
                   className="border rounded-lg shadow-lg p-5 flex flex-col items-center bg-white transition-transform transform hover:scale-105 relative"
                 >
                   {/* File Thumbnail or Icon */}
@@ -290,6 +293,7 @@ import {
                     <img
                       src={file.secure_url}
                       alt={file.public_id}
+                      onClick={() => handleShowDetails(file.asset_id)} // Trigger file detail fetch on click
                       className="w-full h-40 object-cover rounded mb-4 shadow-md"
                     />
                   )}

@@ -35,25 +35,25 @@ const BrandFormTabs = () => {
 
   const fetchBrand = async () => {
     try {
-      //const response = await axios.get(`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`);
-//setFormData(response.data);
-      const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
-      if (response.data && response.data.result) {
-        const brand = response.data.result;
-        const brandjson = {
-          name: brand.name,
-          description: brand.description,
-          logoName: "manish",
-          shortDescription: brand.shortDescription,
-          logoUrl:brand.logoUrl,
-          flags: {
-            isActive: brand.flags.isActive,
-            isFeatured: brand.flags.isFeatured,
-          },
-          images:brand.images
-        };
-        setFormData(brandjson);
-     }
+      const response = await axios.get(`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/19`);
+setFormData(response.data);
+    //   const response = await axios.get(`${APIBASE_URL}/api/Brand/${id}`);
+    //   if (response.data && response.data.result) {
+    //     const brand = response.data.result;
+    //     const brandjson = {
+    //       name: brand.name,
+    //       description: brand.description,
+    //       logoName: "manish",
+    //       shortDescription: brand.shortDescription,
+    //       logoUrl:brand.logoUrl,
+    //       flags: {
+    //         isActive: brand.flags.isActive,
+    //         isFeatured: brand.flags.isFeatured,
+    //       },
+    //       images:brand.images
+    //     };
+    //     setFormData(brandjson);
+    //  }
      
     } catch (err) {
       toast.error("Error fetching brand data");
@@ -71,20 +71,29 @@ const BrandFormTabs = () => {
     }));
   };
 
-  const handleLogoChange = (file) => {
-    if (file) {
-      // Create a FileReader to generate the base64 string for preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          logo: file, // Store the actual file
-          logoBase64: reader.result, // Store the base64 string for preview
-        }));
-      };
-      reader.readAsDataURL(file); // Convert the file to base64
-    }
-  };
+const handleLogoChange = (logoSource, type) => {
+  if (type === "file") {
+    // If the logo is a manually uploaded file (base64)
+    setFormData((prevData) => ({
+      ...prevData,
+      logoBase64: logoSource, // Base64 string for manual file uploads
+      logoUrl: null, // Clear the URL if a manual file is uploaded
+    }));
+  } else if (type === "url") {
+    // If the logo is selected from the asset manager (URL)
+    setFormData((prevData) => ({
+      ...prevData,
+      logoUrl: logoSource, // URL from asset manager
+      logoBase64: null, // Clear the base64 if a URL is selected
+    }));
+  }
+};
+const handleLogoNameChange = (name) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    logoName: name.split('/').pop(), // Update logoName
+  }));
+};
 
   const handleFlagsChange = (flag, value) => {
     setFormData((prevData) => ({
@@ -112,18 +121,18 @@ const BrandFormTabs = () => {
   //console.log("Processed Form Data:", processedFormData);
     // Submit form logic goes here
     console.log("Form submitted:", formData);
-    try {
-      const response = axios.put(
-        `${APIBASE_URL}/api/Brand/${id}`,
-       // `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`,
-       formData
-      );
-      if (response.data) {
-        console.log(response.data);
-      }
-    } catch (err) {
-      toast.error("Error submitting brand data");
-    }
+    // try {
+    //   const response = axios.put(
+    //     `${APIBASE_URL}/api/Brand/${id}`,
+    //    // `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`,
+    //    formData
+    //   );
+    //   if (response.data) {
+    //     console.log(response.data);
+    //   }
+    // } catch (err) {
+    //   toast.error("Error submitting brand data");
+    // }
   };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -198,6 +207,7 @@ const BrandFormTabs = () => {
                   logo={formData.logoBase64 || formData.logoUrl} // Pass logoPreview here for rendering the preview
                   onInputChange={(value) => handleInputChange("name", value)}
                   onLogoChange={handleLogoChange} // Pass handleLogoChange for file input
+                  onLogoNameChange={handleLogoNameChange} // Pass handleLogoNameChange
                 />
               </Tab.Panel>
               <Tab.Panel>
