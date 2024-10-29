@@ -11,6 +11,20 @@ const ImagesVideos = ({ images, videos, onImagesChange, onVideosChange }) => {
     setShowModal(true); // Show the modal
   };
 
+  // New function to handle file selection from the asset manager
+  const handleFileSelect = (fileDetails) => {
+    setShowModal(false); // Close the modal after file selection
+    // Add the selected image from the asset manager
+    const newImage = {
+      name: fileDetails.public_id.split('/').pop(),
+      url: fileDetails.secure_url,
+      displayOrder: imageDetails.length + 1,
+      description: `Image ${imageDetails.length + 1}`,
+    };
+    setImageDetails((prevImages) => [...prevImages, newImage]);
+    onImagesChange([...imageDetails, newImage]);
+  };
+
   // Function to handle image upload and convert to base64
   const handleImageUpload = (files) => {
     const newImages = Array.from(files).map((file, index) => {
@@ -149,7 +163,12 @@ const ImagesVideos = ({ images, videos, onImagesChange, onVideosChange }) => {
       <div>hell</div>
 
       {/* Modal to show file details */}
-      {showModal && <AssetManagerModal onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <AssetManagerModal
+          onClose={() => setShowModal(false)}
+          onFileSelect={handleFileSelect} // Added onFileSelect handler
+        />
+      )}
     </div>
   );
 };

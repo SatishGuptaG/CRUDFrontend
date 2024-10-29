@@ -105,7 +105,7 @@ const handleLogoNameChange = (name) => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
   //     Prepare the form data by removing the base64 prefix from images and logoPreview
   // const processedFormData = {
   //   ...formData,
@@ -122,13 +122,17 @@ const handleLogoNameChange = (name) => {
     // Submit form logic goes here
     console.log("Form submitted:", formData);
     try {
-      const response = axios.put(
+      const response =  await axios.put(
         `${APIBASE_URL}/api/Brand/${id}`,
        // `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Brand/Brand/19`,
        formData
       );
-      if (response.data) {
-        console.log(response.data);
+      if (response.data.result.isValid) {
+        toast.success(response.data.result.message);
+      }
+      else
+      {
+        toast.error(response.data.result.message);
       }
     } catch (err) {
       toast.error("Error submitting brand data");
