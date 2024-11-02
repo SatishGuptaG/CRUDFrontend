@@ -1,12 +1,38 @@
-import React from "react";
-
-const CategoryBasicInfo = ({
-  name,
-  code,
-  logo,
-  onInputChange,
-  onLogoChange,
+import React, {useState} from "react";
+import AssetManagerModal from "../AssetManager/AssetManagerModal";
+const CategoryBasicInfo = ({name, code, logo, onInputChange, onLogoChange, onLogoNameChange
 }) => {
+
+  const [showModal, setShowModal] = useState(false); // Modal state
+
+  // Handle showing the modal with file details
+  const handleShowAssetManager = () => {
+    setShowModal(true); // Show the modal
+  };
+
+  // Handle file selection from the asset manager
+  const handleFileSelect = (fileDetails) => {
+    setShowModal(false); // Close the modal after file selection
+    // Call onLogoChange with the file's URL from asset manager
+    onLogoChange(fileDetails.secure_url, "url"); // Passing "url" type to distinguish between URL and file
+    onLogoNameChange(fileDetails.public_id); // Pass the file name/public_id to parent component
+
+  };
+
+  // Handle file input change for manual upload
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    onLogoNameChange(e.target.files[0].name); // Pass the file name/public_id to parent component
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onLogoChange(reader.result, "file"); // Passing "file" type to distinguish between URL and file
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Name Input */}
@@ -44,7 +70,7 @@ const CategoryBasicInfo = ({
         </label>
         <input
           type="file"
-          onChange={(e) => onLogoChange(e.target.files[0])}
+          onChange={handleFileUpload}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
         />
         {logo && (
@@ -58,6 +84,23 @@ const CategoryBasicInfo = ({
           </div>
         )}
       </div>
+      {/* Button to Open Asset Manager Modal */}
+      <div>
+        <button
+          onClick={handleShowAssetManager}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Add From Asset Manager
+        </button>
+      </div>
+
+      {/* Modal to show file details */}
+      {showModal && (
+        <AssetManagerModal
+          onClose={() => setShowModal(false)}
+          onFileSelect={handleFileSelect} // Pass handleFileSelect to AssetManagerModal
+        />
+      )}
     </div>
   );
 };
