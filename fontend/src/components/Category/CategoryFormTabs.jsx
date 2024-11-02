@@ -22,6 +22,7 @@ const CategoryFormTabs = () => {
     id: id,
     name: "",
     code: "",
+    logoName: "manish",
     logoUrl: null, // This will store the logo file
     logoBase64: null, // This will store the preview URL or base64 string
     description: "",
@@ -41,24 +42,25 @@ const CategoryFormTabs = () => {
       //   `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`
       // );
       if (response.data && response.data.result) {
-        const brand = response.data.result;
-        const brandjson = {
-          name: brand.name,
-          code:brand.code,
-          description: brand.description,
-          shortDescription: brand.shortDescription,
-          logoUrl:brand.logoUrl,
+        const category = response.data.result;
+        const categoryjson = {
+          name: category.name,
+          code:category.code,
+          logoName: "manish",
+          description: category.description,
+          shortDescription: category.shortDescription,
+          logoUrl:category.logoUrl,
           flags: {
-            isActive: brand.flags.isActive,
-            isFeatured: brand.flags.isFeatured,
+            isActive: category.flags.isActive,
+            isFeatured: category.flags.isFeatured,
           },
-          images:brand.images
+          images:category.images
         };
-        setFormData(brandjson);
+        setFormData(categoryjson);
       //setFormData(response.data);
       }
     } catch (err) {
-      toast.error("Error fetching brand data");
+      toast.error("Error fetching category data");
     }
   };
 
@@ -73,20 +75,29 @@ const CategoryFormTabs = () => {
     }));
   };
 
-  const handleLogoChange = (file) => {
-    if (file) {
-      // Create a FileReader to generate the base64 string for preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          logo: file, // Store the actual file
-          logoBase64: reader.result, // Store the base64 string for preview
-        }));
-      };
-      reader.readAsDataURL(file); // Convert the file to base64
-    }
-  };
+  const handleLogoChange = (logoSource, type) => {
+    if (type==="file") {
+     // If the logo is a manually uploaded file (base64)
+     setFormData((prevData) => ({
+      ...prevData,
+      logoBase64: logoSource, // Base64 string for manual file uploads
+      logoUrl: null, // Clear the URL if a manual file is uploaded
+    }));
+  } else if (type === "url") {
+    // If the logo is selected from the asset manager (URL)
+    setFormData((prevData) => ({
+      ...prevData,
+      logoUrl: logoSource, // URL from asset manager
+      logoBase64: null, // Clear the base64 if a URL is selected
+    }));
+  }
+};
+const handleLogoNameChange = (name) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    logoName: name.split('/').pop(), // Update logoName
+  }));
+};
 
   const handleFlagsChange = (flag, value) => {
     setFormData((prevData) => ({
@@ -117,14 +128,10 @@ const CategoryFormTabs = () => {
     try {
       const response = await axios.put(
          `${APIBASE_URL}/api/Category/${id}`,
-        //`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
         formData
       );
-      console.log(response.data.result.isValid);
       if (response.data.result.isValid) {
-        //console.log(response.data);
         toast.success(response.data.result.message);
-        await fetchCategory(); // Refresh product data after update
       }else
       {
         toast.error(response.data.result.message);
@@ -170,7 +177,6 @@ const CategoryFormTabs = () => {
             </Tab.List>
           </div>
         </div>
-
         {/* Right Side: Content */}
         <div className="col-span-9 bg-gray-50">
           {/* Header */}
@@ -207,6 +213,7 @@ const CategoryFormTabs = () => {
                   logo={formData.logoBase64 || formData.logoUrl} // Pass logoBase64 here for rendering the preview
                   onInputChange={(value) => handleInputChange("name", value)}
                   onLogoChange={handleLogoChange} // Pass handleLogoChange for file input
+                  onLogoNameChange={handleLogoNameChange}
                 />
               </Tab.Panel>
               <Tab.Panel>
