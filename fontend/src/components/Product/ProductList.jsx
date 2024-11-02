@@ -102,9 +102,48 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(
-        "https://localhost:7059/api/Product?currentPage=1&pageSize=40"
-      );
+      // const response = await axios.get(
+      //   "https://localhost:7059/api/Product?currentPage=1&pageSize=40"
+      // );
+       // Simulate API response with dummy data
+    const response = {
+      data: {
+        currentPage: 1,
+        pageSize: 40,
+        totalRecords: 13,
+        status: "Success",
+        statusCode: 200,
+        result: [
+          {
+            id: "0b97f534-6297-ef11-b6ae-cc23ec208ead",
+            name: "satish",
+            stockCode: "asdasdg",
+            price: 20.0,
+            categoryName: null,
+            isActive: true
+          },
+          {
+            id: "da4eeba4-6a7a-ef11-b6ab-8c16f6f17cd6",
+            name: "Banana",
+            stockCode: "B001",
+            price: 10000.0,
+            categoryName: "system",
+            isActive: true
+          },
+          {
+            id: "5c60e416-667a-ef11-b6ab-8c16f6f17cd6",
+            name: "Apple",
+            stockCode: "A10001",
+            price: 5001.0,
+            categoryName: "circuit",
+            isActive: true
+          },
+          // Additional product items...
+        ],
+        message: "Products fetched successfully",
+        errorDetails: null
+      }
+    };
       if (response.data && response.data.result) {
         setProducts(response.data.result);
       }
