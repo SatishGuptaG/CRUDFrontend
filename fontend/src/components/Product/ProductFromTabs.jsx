@@ -7,84 +7,168 @@ import axios from "axios";
 import { APIBASE_URL } from "../../Utils/Server";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import CategoryBasicInfo from "./CategoryBasicInfo";
+import ProductBasicInfo from "./ProductBasicInfo";
+import ProductIdentifier from "./ProductIdentifier";
 
 const CATEGORY_MENU_TABS = [
   { id: 1, title: "Basic Information", iconClass: "icon-basic" },
   { id: 2, title: "Description", iconClass: "icon-description" },
   { id: 3, title: "Images & Videos", iconClass: "icon-media" },
   { id: 4, title: "Configuration", iconClass: "icon-config" },
+  { id: 5, title: "Identifier", iconClass: "icon-identifier" }, // New Identifier Tab
 ];
 
 const ProductFormTabs = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     id: id,
-    name: "",
-    code: "",
-    logoUrl: null, // This will store the logo file
-    logoBase64: null, // This will store the preview URL or base64 string
-    description: "",
-    shortDescription: "",
-    images: [],
+    basicInfo: {
+      name: "",
+      description: "",
+      shortDescription: "",
+      price: 0,
+      gender: "",
+      categoryId: "",
+      brandId: "",
+    },
+    media: {
+      files:[]
+    },
     videos: [],
+    identifier: {
+      sku: "",
+      stockCode: "",
+      ean: "",
+      upc: "",
+    },
     flags: {
       isActive: false,
       isFeatured: false,
     },
+    isActive: true,
   });
-
+  const [categoryId, setCategoryId] = useState("");
+  const [brandId, setBrandId] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const fetchCategory = async () => {
     try {
-      const response = await axios.get(`${APIBASE_URL}/api/Category/${id}`);
-      // const response = await axios.get(
-      //   `https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`
-      // );
-      if (response.data && response.data.result) {
-        const brand = response.data.result;
-        const brandjson = {
-          name: brand.name,
-          code:brand.code,
-          description: brand.description,
-          shortDescription: brand.shortDescription,
-          logoUrl:brand.logoUrl,
-          flags: {
-            isActive: brand.flags.isActive,
-            isFeatured: brand.flags.isFeatured,
-          },
-          images:brand.images
-        };
-        setFormData(brandjson);
-      //setFormData(response.data);
-      }
-    } catch (err) {
-      toast.error("Error fetching brand data");
+      const response = await axios.get(
+        "https://localhost:7059/api/List/category"
+      );
+      setCategories(response.data.result);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
     }
   };
 
-  useEffect(() => {
-    fetchCategory();
-  }, [id]);
-
-  const handleInputChange = (section, value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [section]: value,
-    }));
+  const fetchBrand = async () => {
+    try {
+      const response = await axios.get("https://localhost:7059/api/List/brand");
+      setBrands(response.data.result);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+    }
   };
 
-  const handleLogoChange = (file) => {
-    if (file) {
-      // Create a FileReader to generate the base64 string for preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          logo: file, // Store the actual file
-          logoBase64: reader.result, // Store the base64 string for preview
-        }));
-      };
-      reader.readAsDataURL(file); // Convert the file to base64
+  // Fetch product details for editing
+  const fetchProductDetail = async () => {
+    try {
+      const response = await axios.get(
+        `https://localhost:7059/api/Product/${id}`
+      );
+      console.log(response.data);
+      if (response.data && response.data.result) {
+        const product = response.data.result;
+        setFormData({
+          id: product.id,
+          basicInfo: {
+            name: product.basicInfo.name,
+            description: product.basicInfo.description || "",
+            shortDescription: product.basicInfo.shortDescription || "",
+            price: product.basicInfo.price,
+            gender: product.basicInfo.gender || "",
+            categoryId: product.basicInfo.categoryId,
+            brandId: product.basicInfo.brandId,
+          },
+          identifier: {
+            sku: product.identifier.sku || "",
+            stockCode: product.identifier.stockCode || "",
+            ean: product.identifier.ean || "",
+            upc: product.identifier.upc || "",
+          },
+          flags: {
+            isActive: product.isActive,
+            isFeatured: false,
+          },
+          media:{
+            files:product.media.files
+          },
+         // images: product.media.files, // Assuming no images data in the response, update accordingly if there is.
+          videos: [], // Assuming no videos data in the response, update accordingly if there is.
+          isActive: true,
+        });
+        console.log(formData);
+
+        // Ensure brands and categories are loaded before setting IDs
+        if (brands.length && categories.length) {
+          const bdId =
+            brands.find(
+              (x) => x.id.toLowerCase() === formData.basicInfo.brandId
+            )?.id || "";
+          setBrandId(bdId);
+          const catId =
+            categories.find(
+              (x) => x.id.toLowerCase() === formData.basicInfo.categoryId
+            )?.id || "";
+          setCategoryId(catId);
+        }
+      }
+    } catch (err) {
+      toast.error("Error fetching product data");
+    }
+  };
+  useEffect(() => {
+    // Fetch categories and brands first
+    const fetchInitialData = async () => {
+      await fetchBrand();
+      await fetchCategory();
+    };
+
+    fetchInitialData();
+  }, []);
+
+  useEffect(() => {
+    // Once categories and brands are loaded, fetch the product
+    if (brands.length > 0 && categories.length > 0) {
+      fetchProductDetail();
+    }
+  }, [brands, categories]); // Wait for both categories and brands to load
+
+  const handleInputChange = (field, value) => {
+    if (field.startsWith("identifier.")) {
+      const identifierField = field.split(".")[1];
+      setFormData((prevData) => ({
+        ...prevData,
+        identifier: {
+          ...prevData.identifier,
+          [identifierField]: value,
+        },
+      }));
+    } else if (field.startsWith("basicInfo.")) {
+      const basicInfoField = field.split(".")[1];
+      setFormData((prevData) => ({
+        ...prevData,
+        basicInfo: {
+          ...prevData.basicInfo,
+          [basicInfoField]: value,
+        },
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [field]: value,
+      }));
     }
   };
 
@@ -99,24 +183,10 @@ const ProductFormTabs = () => {
   };
 
   const handleSubmit = async () => {
-    //     // Prepare the form data by removing the base64 prefix from images and logoBase64
-    // const processedFormData = {
-    //   ...formData,
-    //   images: formData.images.map((image) => ({
-    //     ...image,
-    //     base64: image.base64.replace(/^data:image\/[a-z]+;base64,/, ""),
-    //   })),
-    //   logoBase64: formData.logoBase64
-    //     ? formData.logoBase64.replace(/^data:image\/[a-z]+;base64,/, "")
-    //     : null, // Only process if logoBase64 exists
-    // };
-
-    //console.log("Processed Form Data:", processedFormData);
-    // Submit form logic goes here
     console.log("Form submitted:", formData);
     try {
       const response = await axios.put(
-         `${APIBASE_URL}/api/Category/${id}`,
+         `${APIBASE_URL}/api/Product/${id}`,
         //`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
         formData
       );
@@ -124,13 +194,13 @@ const ProductFormTabs = () => {
       if (response.data.result.isValid) {
         //console.log(response.data);
         toast.success(response.data.result.message);
-        await fetchCategory(); // Refresh product data after update
+        await fetchProductDetail(); // Refresh product data after update
       }else
       {
         toast.error(response.data.result.message);
       }
     } catch (err) {
-      toast.error("Error submitting category data");
+      toast.error("Error submitting product data");
     }
   };
 
@@ -189,10 +259,11 @@ const ProductFormTabs = () => {
             )}
             <div>
               <h1 className="text-xl font-semibold text-gray-800">
-                {formData.name || "Category Detail"}
+                {formData.basicInfo.name || "Product Detail"}
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                {formData.shortDescription || "Category ShortDescription"}
+                {formData.basicInfo.shortDescription ||
+                  "Category ShortDescription"}
               </p>
             </div>
           </div>
@@ -201,26 +272,32 @@ const ProductFormTabs = () => {
           <div className="px-10 py-6">
             <Tab.Panels>
               <Tab.Panel>
-                <CategoryBasicInfo
-                  name={formData.name}
-                  code={formData.code}
-                  logo={formData.logoBase64 || formData.logoUrl} // Pass logoBase64 here for rendering the preview
-                  onInputChange={(value) => handleInputChange("name", value)}
-                  onLogoChange={handleLogoChange} // Pass handleLogoChange for file input
+                <ProductBasicInfo
+                  basicInfo={formData.basicInfo}
+                  stockCode={formData.identifier.stockCode}
+                  categories={categories}
+                  brands={brands}
+                  selectedCategoryId={(id) =>
+                    handleInputChange("basicInfo.categoryId", id)
+                  }
+                  selectedBrandId={(id) =>
+                    handleInputChange("basicInfo.brandId", id)
+                  }
+                  onInputChange={handleInputChange}
                 />
               </Tab.Panel>
               <Tab.Panel>
                 <Description
-                  description={formData.description}
-                  shortDescription={formData.shortDescription}
+                  description={formData.basicInfo.description}
+                  shortDescription={formData.basicInfo.shortDescription}
                   onInputChange={(field, value) =>
-                    handleInputChange(field, value)
+                    handleInputChange(`basicInfo.${field}`, value)
                   }
                 />
               </Tab.Panel>
               <Tab.Panel>
                 <ImagesVideos
-                  images={formData.images}
+                  images={formData.media.files}
                   videos={formData.videos}
                   onImagesChange={(files) => handleInputChange("images", files)}
                   onVideosChange={(files) => handleInputChange("videos", files)}
@@ -230,6 +307,18 @@ const ProductFormTabs = () => {
                 <Configuration
                   flags={formData.flags}
                   onFlagChange={handleFlagsChange}
+                />
+              </Tab.Panel>
+              {/* New Identifier Tab.Panel */}
+              <Tab.Panel>
+                <ProductIdentifier
+                  sku={formData.identifier.sku}
+                  stockCode={formData.identifier.stockCode}
+                  ean={formData.identifier.ean}
+                  upc={formData.identifier.upc}
+                  onInputChange={(field, value) =>
+                    handleInputChange(`identifier.${field}`, value)
+                  }
                 />
               </Tab.Panel>
             </Tab.Panels>

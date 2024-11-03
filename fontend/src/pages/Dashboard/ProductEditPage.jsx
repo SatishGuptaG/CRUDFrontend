@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import DashboardHeader from '../../components/Dashboard/DashboardHeader'
 import DashboardSideBar from '../../components/Dashboard/DashboardSideBar'
 import ProductEdit from '../../components/Product/ProductEdit'
+import ProductFormTabs from '../../components/Product/ProductFromTabs'
 
 const ProductEditPage = () => {
   const [darkMode, setDarkMode] = useState(false); // Define state for dark mode
@@ -12,11 +13,11 @@ const ProductEditPage = () => {
 
     {/* Fixed Sidebar */}
     <div className="fixed top-16 left-0">
-      <DashboardSideBar active={1} darkMode={darkMode} />
+      <DashboardSideBar active={4} darkMode={darkMode} />
     </div>
     {/* Main Section */}
     <div className="ml-[80px] lg:ml-[60px] mt-16 flex-1 p-6 bg-gray-100 dark:bg-gray-900 h-screen overflow-auto">
-      <ProductEdit/>
+      <ProductFormTabs/>
     </div>
   </div>
   )
