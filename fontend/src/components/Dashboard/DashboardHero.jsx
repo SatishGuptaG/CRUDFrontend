@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { LoadingSpinner } from '../Loader/LoadingSpinner';
 
+const cardClasses = 'p-4 rounded-lg flex items-center justify-between transition-transform transform hover:scale-105 shadow-lg'
+const textClasses = 'text-lg font-semibold text-white'
+const imgClasses = 'w-12 h-12 object-cover rounded-full border-2 border-white shadow-lg'
+
+const ProductCard = ({ status, total, imageUrl, altText, bgColor }) => {
+  return (
+    <div className={`${bgColor} ${cardClasses}`}>
+      <div>
+        <p className={textClasses}>{status}</p>
+        <p className="text-sm text-white">Total: {total}</p>
+      </div>
+      <img src={imageUrl} alt={altText} className={imgClasses} />
+    </div>
+  )
+}
+
 const DashboardHero = () => {
   const [loading, setLoading] = useState(true);
 
@@ -12,12 +28,15 @@ const DashboardHero = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="p-20 bg-white dark:bg-gray-800 shadow-md rounded-md">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-200">
-        Welcome to the Dashboard!
-      </h2>
-      {/* Add more hero section content like charts, stats, etc. */}
+    <div className="max-w-4xl mx-auto p-4 border border-zinc-300 rounded-lg shadow-lg">
+    <h2 className="text-2xl font-bold text-primary mb-6">Product Status</h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <ProductCard status="Active" total={150} imageUrl="https://openui.fly.dev/openui/200x200.svg?text=Active" altText="Active" bgColor="bg-green-500" />
+      <ProductCard status="Draft" total={50} imageUrl="https://openui.fly.dev/openui/200x200.svg?text=Draft" altText="Draft" bgColor="bg-yellow-500" />
+      <ProductCard status="Pending" total={30} imageUrl="https://openui.fly.dev/openui/200x200.svg?text=Pending" altText="Pending" bgColor="bg-blue-500" />
+      <ProductCard status="Archived" total={20} imageUrl="https://openui.fly.dev/openui/200x200.svg?text=Archived" altText="Archived" bgColor="bg-red-500" />
     </div>
+  </div>
   );
 };
 
