@@ -28,8 +28,8 @@ const DashboardHero = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="max-w-4xl mx-auto p-4 border border-zinc-300 rounded-lg shadow-lg">
-    <h2 className="text-2xl font-bold text-primary mb-6">Product Status</h2>
+    <div className=" mx-auto p-4 ">
+    <h2 className="border p-4 border-zinc-300 rounded-lg shadow-lg text-2xl font-bold text-primary mb-6">Product Status</h2>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <ProductCard status="Active" total={150} imageUrl="https://openui.fly.dev/openui/200x200.svg?text=Active" altText="Active" bgColor="bg-green-500" />
       <ProductCard status="Draft" total={50} imageUrl="https://openui.fly.dev/openui/200x200.svg?text=Draft" altText="Draft" bgColor="bg-yellow-500" />
