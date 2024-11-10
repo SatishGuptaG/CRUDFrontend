@@ -102,7 +102,7 @@ const ProductFormTabs = () => {
             isFeatured: false,
           },
           media:{
-            files:product.media.files
+            files:product.media?.files
           },
          // images: product.media.files, // Assuming no images data in the response, update accordingly if there is.
           videos: [], // Assuming no videos data in the response, update accordingly if there is.
@@ -204,7 +204,12 @@ const ProductFormTabs = () => {
       if (response.data.result.isValid) {
         //console.log(response.data);
         toast.success(response.data.result.message);
-        await fetchProductDetail(); // Refresh product data after update
+       // await fetchProductDetail(); // Refresh product data after update
+        // Reload the page after fetching product details
+        // Delay before reloading the page (e.g., 2 seconds)
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); // 2000 milliseconds = 2 seconds
       }else
       {
         toast.error(response.data.result.message);
