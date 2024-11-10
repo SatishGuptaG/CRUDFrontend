@@ -164,7 +164,17 @@ const ProductFormTabs = () => {
           [basicInfoField]: value,
         },
       }));
-    } else {
+    }else if (field === "media.files") {
+      // Handle updating media files specifically
+      setFormData((prevData) => ({
+        ...prevData,
+        media: {
+          ...prevData.media,
+          files: value,
+        },
+      }));
+    } 
+    else {
       setFormData((prevData) => ({
         ...prevData,
         [field]: value,
@@ -299,7 +309,7 @@ const ProductFormTabs = () => {
                 <ImagesVideos
                   images={formData.media.files}
                   videos={formData.videos}
-                  onImagesChange={(files) => handleInputChange("images", files)}
+                  onImagesChange={(files) => handleInputChange("media.files", files)}
                   onVideosChange={(files) => handleInputChange("videos", files)}
                 />
               </Tab.Panel>
