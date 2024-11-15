@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import ProductBasicInfo from "./ProductBasicInfo";
 import ProductIdentifier from "./ProductIdentifier";
+import { ProductStatus } from "../../enums/ProductStatus";
+import ProductStatusModel from "./ProductStatusModel";
 
 const CATEGORY_MENU_TABS = [
   { id: 1, title: "Basic Information", iconClass: "icon-basic" },
@@ -20,6 +22,9 @@ const CATEGORY_MENU_TABS = [
 
 const ProductFormTabs = () => {
   const { id } = useParams();
+  const [status, setStatus] = useState(ProductStatus.Draft); // Default status Draft
+  const [editedStatus, setEditedStatus] = useState(null); // State to track edited status
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     id: id,
     basicInfo: {
@@ -32,7 +37,7 @@ const ProductFormTabs = () => {
       brandId: "",
     },
     media: {
-      files:[]
+      files: [],
     },
     videos: [],
     identifier: {
@@ -70,6 +75,12 @@ const ProductFormTabs = () => {
       console.error("Error fetching brands:", error);
     }
   };
+  const handleStatusChange = (newStatus) => {
+    // if (newStatus !== status) {
+    setEditedStatus(newStatus);
+    setShowModal(true); // Open the modal for confirmation
+    //}
+  };
 
   // Fetch product details for editing
   const fetchProductDetail = async () => {
@@ -101,10 +112,10 @@ const ProductFormTabs = () => {
             isActive: product.isActive,
             isFeatured: false,
           },
-          media:{
-            files:product.media?.files
+          media: {
+            files: product.media?.files,
           },
-         // images: product.media.files, // Assuming no images data in the response, update accordingly if there is.
+          // images: product.media.files, // Assuming no images data in the response, update accordingly if there is.
           videos: [], // Assuming no videos data in the response, update accordingly if there is.
           isActive: true,
         });
@@ -164,7 +175,7 @@ const ProductFormTabs = () => {
           [basicInfoField]: value,
         },
       }));
-    }else if (field === "media.files") {
+    } else if (field === "media.files") {
       // Handle updating media files specifically
       setFormData((prevData) => ({
         ...prevData,
@@ -173,8 +184,7 @@ const ProductFormTabs = () => {
           files: value,
         },
       }));
-    } 
-    else {
+    } else {
       setFormData((prevData) => ({
         ...prevData,
         [field]: value,
@@ -191,12 +201,17 @@ const ProductFormTabs = () => {
       },
     }));
   };
+  const handleUpdate = async (e) => {
+    e.preventDefault();
 
+    setStatus(editedStatus);
+    setShowModal(false); // Close the modal after updating
+  };
   const handleSubmit = async () => {
     console.log("Form submitted:", formData);
     try {
       const response = await axios.put(
-         `${APIBASE_URL}/api/Product/${id}`,
+        `${APIBASE_URL}/api/Product/${id}`,
         //`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
         formData
       );
@@ -204,14 +219,13 @@ const ProductFormTabs = () => {
       if (response.data.result.isValid) {
         //console.log(response.data);
         toast.success(response.data.result.message);
-       // await fetchProductDetail(); // Refresh product data after update
+        // await fetchProductDetail(); // Refresh product data after update
         // Reload the page after fetching product details
         // Delay before reloading the page (e.g., 2 seconds)
         setTimeout(() => {
           window.location.reload();
         }, 1000); // 2000 milliseconds = 2 seconds
-      }else
-      {
+      } else {
         toast.error(response.data.result.message);
       }
     } catch (err) {
@@ -259,28 +273,80 @@ const ProductFormTabs = () => {
         {/* Right Side: Content */}
         <div className="col-span-9 bg-gray-50">
           {/* Header */}
-          <div className="px-10 py-6 border-b border-gray-200 flex items-center space-x-4">
+          <div className="px-10 py-6 border-b border-gray-200 flex items-center justify-between space-x-6">
             {/* Logo */}
             {formData.logoBase64 || formData.logoUrl ? (
               <img
                 src={formData.logoBase64 || formData.logoUrl} // Use logoBase64 if available, otherwise use logoUrl
                 alt="Category Logo"
-                className="w-12 h-12 object-cover rounded-full"
+                className="w-14 h-14 object-cover rounded-full shadow-lg"
               />
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                <span>No Logo</span>
+              <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 font-semibold">
+                No Logo
               </div>
             )}
-            <div>
-              <h1 className="text-xl font-semibold text-gray-800">
+
+            <div className="flex-grow ml-4">
+              <h1 className="text-2xl font-semibold text-gray-800 leading-tight">
                 {formData.basicInfo.name || "Product Detail"}
               </h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 mt-2">
                 {formData.basicInfo.shortDescription ||
                   "Category ShortDescription"}
               </p>
             </div>
+
+            {/* Status Buttons */}
+            <div className="flex items-center space-x-2 ml-auto">
+              {/* Show buttons based on status */}
+              {status === ProductStatus.Draft && (
+                <button
+                  type="button"
+                  className="bg-yellow-500 text-xs px-4 py-2 rounded-full hover:bg-yellow-600 focus:outline-none transition duration-200"
+                  onClick={() => handleStatusChange(ProductStatus.Draft)}
+                >
+                  Draft
+                </button>
+              )}
+              {status === ProductStatus.Active && (
+                <button
+                  type="button"
+                  className="bg-green-500 text-xs px-4 py-2 rounded-full hover:bg-green-600 focus:outline-none transition duration-200"
+                  onClick={() => handleStatusChange(ProductStatus.Active)}
+                >
+                  Active
+                </button>
+              )}
+              {status === ProductStatus.Archived && (
+                <button
+                  type="button"
+                  className="bg-blue-500 text-xs px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none transition duration-200"
+                  onClick={() => handleStatusChange(ProductStatus.Archived)}
+                >
+                  Archived
+                </button>
+              )}
+              {status === ProductStatus.Discontinued && (
+                <button
+                  type="button"
+                  className="bg-red-500 text-xs px-4 py-2 rounded-full hover:bg-red-600 focus:outline-none transition duration-200"
+                  onClick={() => handleStatusChange(ProductStatus.Discontinued)}
+                >
+                  Discontinued
+                </button>
+              )}
+            </div>
+
+            {/* Update status Modal */}
+            {showModal && (
+              <ProductStatusModel
+                editedStatus={editedStatus}
+                handleUpdate={handleUpdate}
+                setEditedStatus={setEditedStatus}
+                setShowModal={setShowModal}
+              />
+            )}
           </div>
 
           {/* Content Panels */}
@@ -314,7 +380,9 @@ const ProductFormTabs = () => {
                 <ImagesVideos
                   images={formData.media.files}
                   videos={formData.videos}
-                  onImagesChange={(files) => handleInputChange("media.files", files)}
+                  onImagesChange={(files) =>
+                    handleInputChange("media.files", files)
+                  }
                   onVideosChange={(files) => handleInputChange("videos", files)}
                 />
               </Tab.Panel>
