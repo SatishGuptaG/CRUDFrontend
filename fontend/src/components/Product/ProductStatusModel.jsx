@@ -19,6 +19,7 @@ const ProductStatusModel = ({ editedStatus, handleUpdate, setEditedStatus, setSh
             <option value={ProductStatus.Draft}>Draft</option>
             <option value={ProductStatus.Active}>Active</option>
             <option value={ProductStatus.Archived}>Archived</option>
+            <option value={ProductStatus.Pending}>Pending</option>
             <option value={ProductStatus.Discontinued}>Discontinued</option>
           </select>
         </div>
