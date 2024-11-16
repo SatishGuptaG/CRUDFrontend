@@ -381,18 +381,6 @@ const ProductFormTabs = () => {
                 </button>
               )}
             </div>
-
-            {/* Update status Modal */}
-            {showModal && (
-              <ProductStatusModel
-                editedStatus={editedStatus}
-                handleUpdate={handleUpdate}
-                setEditedStatus={setEditedStatus}
-                setShowModal={setShowModal}
-                isVisible={isVisible}
-                setIsVisible={setIsVisible}
-              />
-            )}
           </div>
 
           {/* Content Panels */}
@@ -458,6 +446,17 @@ const ProductFormTabs = () => {
           </div>
         </div>
       </div>
+        {/* Update status Modal */}
+        {showModal && (
+              <ProductStatusModel
+                editedStatus={editedStatus}
+                handleUpdate={handleUpdate}
+                setEditedStatus={setEditedStatus}
+                setShowModal={setShowModal}
+                isVisible={isVisible}
+                setIsVisible={setIsVisible}
+              />
+            )}
     </Tab.Group>
   );
 };
