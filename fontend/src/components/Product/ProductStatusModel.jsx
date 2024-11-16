@@ -1,7 +1,14 @@
-import React from 'react'
-import { ProductStatus } from '../../enums/ProductStatus'
+import React from 'react';
+import { ProductStatus } from '../../enums/ProductStatus';
 
-const ProductStatusModel = ({ editedStatus, handleUpdate, setEditedStatus, setShowModal }) => {
+const ProductStatusModal = ({
+  editedStatus,
+  handleUpdate,
+  setEditedStatus,
+  setShowModal,
+  isVisible,
+  setIsVisible,
+}) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-8 rounded-lg max-w-md shadow-xl transform transition-all duration-300 ease-out scale-95 hover:scale-100">
@@ -24,6 +31,22 @@ const ProductStatusModel = ({ editedStatus, handleUpdate, setEditedStatus, setSh
           </select>
         </div>
 
+        {/* Conditional Rendering for "Published" */}
+        {editedStatus === ProductStatus.Active && (
+          <div className="flex items-center mb-6">
+            <input
+              type="checkbox"
+              checked={isVisible}
+              onChange={(e) => setIsVisible(e.target.checked)}
+              id="isVisible"
+              className="mr-2"
+            />
+            <label htmlFor="isVisible" className="text-sm font-medium text-gray-700">
+              Published
+            </label>
+          </div>
+        )}
+
         <div className="flex justify-end gap-4 mt-5">
           <button
             className="px-5 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none transition-all"
@@ -40,7 +63,7 @@ const ProductStatusModel = ({ editedStatus, handleUpdate, setEditedStatus, setSh
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductStatusModel
+export default ProductStatusModal;

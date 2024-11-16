@@ -25,6 +25,7 @@ const ProductFormTabs = () => {
   const [status, setStatus] = useState(ProductStatus.Draft); // Default status Draft
   const [editedStatus, setEditedStatus] = useState(null); // State to track edited status
   const [showModal, setShowModal] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
     id: id,
     basicInfo: {
@@ -51,6 +52,7 @@ const ProductFormTabs = () => {
       isFeatured: false,
     },
     isActive: true,
+    isVisible: false,
     status : 1
   });
   const [categoryId, setCategoryId] = useState("");
@@ -89,7 +91,7 @@ const ProductFormTabs = () => {
       const response = await axios.get(
         `https://localhost:7059/api/Product/${id}`
       );
-      console.log(response.data);
+      //console.log(response.data);
       if (response.data && response.data.result) {
         const product = response.data.result;
         setFormData({
@@ -111,19 +113,22 @@ const ProductFormTabs = () => {
             ean: product.identifier.ean || "",
             upc: product.identifier.upc || "",
           },
-          flags: {
-            isActive: product.isActive,
-            isFeatured: false,
-          },
+          // flags: {
+          //   isActive: product.isActive,
+          //   isFeatured: false,
+          // },
           media: {
             files: product.media?.files,
           },
           // images: product.media.files, // Assuming no images data in the response, update accordingly if there is.
           videos: [], // Assuming no videos data in the response, update accordingly if there is.
-          isActive: product.basicInfo.isActive || false,
+          isActive: product.isActive || false,
+          isVisible: product.isVisible || false,
           status: product.status || 1,
+          
         });
         setStatus(product.status);
+        setIsVisible(product.isVisible);
        
       // console.log(formData);
        //console.log(product.basicInfo.status,status);
@@ -209,12 +214,15 @@ const ProductFormTabs = () => {
   };
   const handleUpdate = async (e) => {
     e.preventDefault();
+    console.log(isVisible);
     setStatus(editedStatus);
     try {
       const response = await axios.put(
         `${APIBASE_URL}/api/Product/${id}/status`,
         {
-          "status": editedStatus
+          "status": editedStatus,
+          "isVisible": isVisible
+
         }
       );
       if(response.data.result.isValid)
@@ -381,6 +389,8 @@ const ProductFormTabs = () => {
                 handleUpdate={handleUpdate}
                 setEditedStatus={setEditedStatus}
                 setShowModal={setShowModal}
+                isVisible={isVisible}
+                setIsVisible={setIsVisible}
               />
             )}
           </div>
