@@ -203,15 +203,15 @@ const ProductFormTabs = () => {
     }
   };
 
-  const handleFlagsChange = (flag, value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      flags: {
-        ...prevData.flags,
-        [flag]: value,
-      },
-    }));
-  };
+  // const handleFlagsChange = (flag, value) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     flags: {
+  //       ...prevData.flags,
+  //       [flag]: value,
+  //     },
+  //   }));
+  // };
   const handleUpdate = async (e) => {
     e.preventDefault();
     console.log(isVisible);
@@ -310,15 +310,15 @@ const ProductFormTabs = () => {
           {/* Header */}
           <div className="px-10 py-6 border-b border-gray-200 flex items-center justify-between space-x-6">
             {/* Logo */}
-            {formData.logoBase64 || formData.logoUrl ? (
+            {formData.media.files && formData.media?.files[0] ? (
               <img
-                src={formData.logoBase64 || formData.logoUrl} // Use logoBase64 if available, otherwise use logoUrl
+                src={formData.media?.files[0]?.url} // Use logoBase64 if available, otherwise use logoUrl
                 alt="Category Logo"
                 className="w-14 h-14 object-cover rounded-full shadow-lg"
               />
             ) : (
               <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 font-semibold">
-                No Logo
+                No Image
               </div>
             )}
 
