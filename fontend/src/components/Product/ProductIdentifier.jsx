@@ -19,7 +19,7 @@ const ProductIdentifier = ({ sku, stockCode, ean, upc, onInputChange }) => {
         </div>
 
         {/* Stock Code Field */}
-        <div>
+        {/* <div>
           <label className="block text-gray-700 text-sm font-medium mb-2">
             Stock Code
           </label>
@@ -30,7 +30,7 @@ const ProductIdentifier = ({ sku, stockCode, ean, upc, onInputChange }) => {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter Stock Code"
           />
-        </div>
+        </div> */}
 
         {/* EAN Field */}
         <div>

@@ -16,8 +16,8 @@ const CATEGORY_MENU_TABS = [
   { id: 1, title: "Basic Information", iconClass: "icon-basic" },
   { id: 2, title: "Description", iconClass: "icon-description" },
   { id: 3, title: "Images & Videos", iconClass: "icon-media" },
-  { id: 4, title: "Configuration", iconClass: "icon-config" },
-  { id: 5, title: "Identifier", iconClass: "icon-identifier" }, // New Identifier Tab
+ // { id: 4, title: "Configuration", iconClass: "icon-config" },
+  { id: 4, title: "Identifier", iconClass: "icon-identifier" }, // New Identifier Tab
 ];
 
 const ProductFormTabs = () => {
@@ -25,6 +25,7 @@ const ProductFormTabs = () => {
   const [status, setStatus] = useState(ProductStatus.Draft); // Default status Draft
   const [editedStatus, setEditedStatus] = useState(null); // State to track edited status
   const [showModal, setShowModal] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
     id: id,
     basicInfo: {
@@ -35,6 +36,7 @@ const ProductFormTabs = () => {
       gender: "",
       categoryId: "",
       brandId: "",
+      stockCode: "",
     },
     media: {
       files: [],
@@ -42,7 +44,6 @@ const ProductFormTabs = () => {
     videos: [],
     identifier: {
       sku: "",
-      stockCode: "",
       ean: "",
       upc: "",
     },
@@ -51,6 +52,8 @@ const ProductFormTabs = () => {
       isFeatured: false,
     },
     isActive: true,
+    isVisible: false,
+    status : 1
   });
   const [categoryId, setCategoryId] = useState("");
   const [brandId, setBrandId] = useState("");
@@ -88,7 +91,7 @@ const ProductFormTabs = () => {
       const response = await axios.get(
         `https://localhost:7059/api/Product/${id}`
       );
-      console.log(response.data);
+      //console.log(response.data);
       if (response.data && response.data.result) {
         const product = response.data.result;
         setFormData({
@@ -101,26 +104,34 @@ const ProductFormTabs = () => {
             gender: product.basicInfo.gender || "",
             categoryId: product.basicInfo.categoryId,
             brandId: product.basicInfo.brandId,
+            stockCode: product.basicInfo.stockCode,
+
           },
           identifier: {
             sku: product.identifier.sku || "",
-            stockCode: product.identifier.stockCode || "",
+           // stockCode: product.identifier.stockCode || "",
             ean: product.identifier.ean || "",
             upc: product.identifier.upc || "",
           },
-          flags: {
-            isActive: product.isActive,
-            isFeatured: false,
-          },
+          // flags: {
+          //   isActive: product.isActive,
+          //   isFeatured: false,
+          // },
           media: {
             files: product.media?.files,
           },
           // images: product.media.files, // Assuming no images data in the response, update accordingly if there is.
           videos: [], // Assuming no videos data in the response, update accordingly if there is.
-          isActive: true,
+          isActive: product.isActive || false,
+          isVisible: product.isVisible || false,
+          status: product.status || 1,
+          
         });
-        console.log(formData);
-
+        setStatus(product.status);
+        setIsVisible(product.isVisible);
+       
+      // console.log(formData);
+       //console.log(product.basicInfo.status,status);
         // Ensure brands and categories are loaded before setting IDs
         if (brands.length && categories.length) {
           const bdId =
@@ -192,19 +203,43 @@ const ProductFormTabs = () => {
     }
   };
 
-  const handleFlagsChange = (flag, value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      flags: {
-        ...prevData.flags,
-        [flag]: value,
-      },
-    }));
-  };
+  // const handleFlagsChange = (flag, value) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     flags: {
+  //       ...prevData.flags,
+  //       [flag]: value,
+  //     },
+  //   }));
+  // };
   const handleUpdate = async (e) => {
     e.preventDefault();
-
+    console.log(isVisible);
     setStatus(editedStatus);
+    try {
+      const response = await axios.put(
+        `${APIBASE_URL}/api/Product/${id}/status`,
+        {
+          "status": editedStatus,
+          "isVisible": isVisible
+
+        }
+      );
+      if(response.data.result.isValid)
+      {
+        toast.success(response.data.result.message);
+        // Reload the page after fetching product details
+      // Delay before reloading the page (e.g., 2 seconds)
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // 2000 milliseconds = 2 seconds
+      }
+      else 
+        toast.error(response.data.result.message);
+      
+    } catch (error) {
+      toast.error("Error submitting product data",error.message);
+    }
     setShowModal(false); // Close the modal after updating
   };
   const handleSubmit = async () => {
@@ -215,7 +250,7 @@ const ProductFormTabs = () => {
         //`https://67075e76a0e04071d229fd45.mockapi.io/api/v1/Category/15`,
         formData
       );
-      console.log(response.data.result.isValid);
+     // console.log(response.data.result.isValid);
       if (response.data.result.isValid) {
         //console.log(response.data);
         toast.success(response.data.result.message);
@@ -275,15 +310,15 @@ const ProductFormTabs = () => {
           {/* Header */}
           <div className="px-10 py-6 border-b border-gray-200 flex items-center justify-between space-x-6">
             {/* Logo */}
-            {formData.logoBase64 || formData.logoUrl ? (
+            {formData.media.files && formData.media?.files[0] ? (
               <img
-                src={formData.logoBase64 || formData.logoUrl} // Use logoBase64 if available, otherwise use logoUrl
+                src={formData.media?.files[0]?.url} // Use logoBase64 if available, otherwise use logoUrl
                 alt="Category Logo"
                 className="w-14 h-14 object-cover rounded-full shadow-lg"
               />
             ) : (
               <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 font-semibold">
-                No Logo
+                No Image
               </div>
             )}
 
@@ -327,6 +362,15 @@ const ProductFormTabs = () => {
                   Archived
                 </button>
               )}
+                {status === ProductStatus.Pending && (
+                <button
+                  type="button"
+                  className="bg-orange-500 text-xs px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none transition duration-200"
+                  onClick={() => handleStatusChange(ProductStatus.Pending)}
+                >
+                  Pending
+                </button>
+              )}
               {status === ProductStatus.Discontinued && (
                 <button
                   type="button"
@@ -345,6 +389,8 @@ const ProductFormTabs = () => {
                 handleUpdate={handleUpdate}
                 setEditedStatus={setEditedStatus}
                 setShowModal={setShowModal}
+                isVisible={isVisible}
+                setIsVisible={setIsVisible}
               />
             )}
           </div>
@@ -355,7 +401,7 @@ const ProductFormTabs = () => {
               <Tab.Panel>
                 <ProductBasicInfo
                   basicInfo={formData.basicInfo}
-                  stockCode={formData.identifier.stockCode}
+                  stockCode={formData.basicInfo.stockCode}
                   categories={categories}
                   brands={brands}
                   selectedCategoryId={(id) =>
@@ -386,17 +432,11 @@ const ProductFormTabs = () => {
                   onVideosChange={(files) => handleInputChange("videos", files)}
                 />
               </Tab.Panel>
-              <Tab.Panel>
-                <Configuration
-                  flags={formData.flags}
-                  onFlagChange={handleFlagsChange}
-                />
-              </Tab.Panel>
               {/* New Identifier Tab.Panel */}
               <Tab.Panel>
                 <ProductIdentifier
                   sku={formData.identifier.sku}
-                  stockCode={formData.identifier.stockCode}
+                 // stockCode={formData.identifier.stockCode}
                   ean={formData.identifier.ean}
                   upc={formData.identifier.upc}
                   onInputChange={(field, value) =>

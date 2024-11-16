@@ -10,5 +10,6 @@ export const ProductStatus = {
   Draft: 1,
   Active: 2,
   Archived: 3,
-  Discontinued: 4
+  Discontinued: 4,
+  Pending: 5
 };
