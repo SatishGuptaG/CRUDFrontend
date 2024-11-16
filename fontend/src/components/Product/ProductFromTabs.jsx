@@ -312,7 +312,7 @@ const ProductFormTabs = () => {
             {/* Logo */}
             {formData.media.files && formData.media?.files[0] ? (
               <img
-                src={formData.media?.files[0]?.url} // Use logoBase64 if available, otherwise use logoUrl
+                src={formData.media?.files[0]?.base64 || formData.media?.files[0]?.url} // Use logoBase64 if available, otherwise use logoUrl
                 alt="Category Logo"
                 className="w-14 h-14 object-cover rounded-full shadow-lg"
               />
