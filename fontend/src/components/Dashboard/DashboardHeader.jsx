@@ -20,6 +20,15 @@ const DashboardHeader = ({ darkMode, setDarkMode }) => {
 
   const pathnames = location.pathname.split('/').filter((x) => x);
 
+ // Update specific segments dynamically
+ const updatedPathnames = pathnames.map((segment) => {
+  if (segment === 'customAttributeDetail') return 'CustomAttributes';
+  if (segment === 'brandDetail') return 'Brands';
+  if (segment === 'ProductDetail') return 'Products';
+  if (segment === 'categoryDetail') return 'Categories';
+  return segment;
+});
+
   return (
     <header className="fixed top-0 left-0 w-full h-16 bg-white dark:bg-gray-800 shadow-md flex items-center justify-between px-6 z-50">
       {/* Breadcrumb Navigation */}
@@ -28,10 +37,10 @@ const DashboardHeader = ({ darkMode, setDarkMode }) => {
           <li>
             <Link to="/">Home</Link>
           </li>
-          {pathnames.map((value, index) => {
-            const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+          {updatedPathnames.map((value, index) => {
+            const to = `/${updatedPathnames.slice(0, index + 1).join('/')}`;
             const breadcrumb = breadcrumbNameMap[to] || value;
-            const isLast = index === pathnames.length - 1;
+            const isLast = index === updatedPathnames.length - 1;
 
             return (
               <React.Fragment key={to}>
