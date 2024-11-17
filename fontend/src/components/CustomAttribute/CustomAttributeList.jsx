@@ -5,19 +5,15 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { RxCross1 } from "react-icons/rx";
-import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import { APIBASE_URL } from "../../Utils/Server";
+import { CreateCustomAttribute } from "../Modals/CreateCustomAttribute";
 
 
 
 const CustomAttributeList = () => {
   const [customAttributes, setCustomAttributes] = useState([]);
-  const [fieldCode, setFieldCode] = useState("");
-  const [fieldName, setFieldName] = useState("");
-  const [inputType, setInputType] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
@@ -73,29 +69,6 @@ const CustomAttributeList = () => {
     alert(`Delete customAttribute with ID: ${id}`);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(`${APIBASE_URL}/api/CustomAttribute`, {
-        fieldCode,
-        fieldName,
-        inputType
-      });
-      if (response.data.result.isValid) {
-        toast.success("Custom Attribute created successfully!");
-        setOpen(false);
-        setFieldCode("");
-        setFieldName("");
-        setInputType("");
-        fetchCustomAttributes(); // Refresh data after creation
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Error creating custom attribute");
-    }
-  };
-
   if (loading) return <LoadingSpinner />; // Show loading spinner
   if (error) return <div>{error}</div>;
 
@@ -111,69 +84,7 @@ const CustomAttributeList = () => {
         </div>
       </div>
       {open && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
-          <div className="w-[90%] md:w-[40%] h-[80vh] bg-white rounded-md shadow p-4 overflow-y-auto">
-            <div className="w-full flex justify-end">
-              <RxCross1
-                size={30}
-                className="cursor-pointer"
-                onClick={() => setOpen(false)}
-              />
-            </div>
-            <h5 className="text-[30px] font-Poppins text-center">Create Custom Attribute</h5>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label className="pb-2">
-                  Field Code <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fieldCode}
-                  className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  onChange={(e) => setFieldCode(e.target.value)}
-                  placeholder="Enter custom attribute code..."
-                />
-              </div>
-              <br />
-              <div>
-                <label className="pb-2">
-                  Field Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fieldName}
-                  className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  onChange={(e) => setFieldName(e.target.value)}
-                  placeholder="Enter field name..."
-                />
-              </div>
-              <br />
-              <div>
-                <label className="pb-2">
-                  Input Type <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={inputType}
-                  className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  onChange={(e) => setInputType(e.target.value)}
-                  placeholder="Enter input type..."
-                />
-              </div>
-              <br />
-              <div>
-                <input
-                  type="submit"
-                  value="Create"
-                  className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] cursor-pointer bg-blue-500 text-white"
-                />
-              </div>
-            </form>
-          </div>
-        </div>
+      <CreateCustomAttribute setOpen={setOpen}/>
       )}
       <AgGridReact
         rowData={customAttributes}
