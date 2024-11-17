@@ -20,7 +20,17 @@ const CustomAttributeList = () => {
     { headerName: "Field Code", field: "fieldCode", sortable: true, filter: true },
     { headerName: "Field Name", field: "fieldName", sortable: true, filter: true },
     { headerName: "Input Type", field: "inputType", sortable: true, filter: true },
-    { headerName: "Last Updated", field: "lastUpdated", sortable: true, filter: true },
+    {
+      headerName: "Last Updated",
+      field: "lastUpdated",
+      sortable: true,
+      filter: true,
+      cellRenderer: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate()}-${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()} @${date.toLocaleTimeString()}`;
+        return formattedDate;
+      },
+    },
     {
       headerName: "Actions",
       field: "actions",
