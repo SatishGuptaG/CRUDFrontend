@@ -10,8 +10,6 @@ import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import { APIBASE_URL } from "../../Utils/Server";
 import { CreateCustomAttribute } from "../Modals/CreateCustomAttribute";
 
-
-
 const CustomAttributeList = () => {
   const [customAttributes, setCustomAttributes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,14 +25,14 @@ const CustomAttributeList = () => {
       headerName: "Actions",
       field: "actions",
       cellRenderer: (params) => (
-        <div className="actions">
-          <span onClick={() => handleView(params.data.id)} className="icon">
+        <div className="actions flex gap-4 items-center justify-center">
+          <span onClick={() => handleView(params.data.id)} className="action-icon text-blue-500 hover:text-blue-700 transition">
             <FontAwesomeIcon icon={faEye} />
           </span>
-          <Link to={`/customAttributeDetail/${params.data.id}`} className="icon">
+          <Link to={`/customAttributeDetail/${params.data.id}`} className="action-icon text-green-500 hover:text-green-700 transition">
             <FontAwesomeIcon icon={faPen} />
           </Link>
-          <span onClick={() => handleDelete(params.data.id)} className="icon">
+          <span onClick={() => handleDelete(params.data.id)} className="action-icon text-red-500 hover:text-red-700 transition">
             <FontAwesomeIcon icon={faTrash} />
           </span>
         </div>
@@ -73,26 +71,53 @@ const CustomAttributeList = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
-      <h2>Custom Attribute List</h2>
-      <div className="w-full flex justify-end">
-        <div
-          className="w-[150px] bg-black h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer"
+    <div className="container mx-auto p-8 bg-gray-50 rounded-lg shadow-xl">
+      <h2 className="text-4xl font-bold text-gray-800 mb-6">Custom Attribute List</h2>
+      
+      <div className="w-full flex justify-end mb-6">
+        <button
+          className="flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all"
           onClick={() => setOpen(true)}
         >
-          <span className="text-white">Create Custom Attribute</span>
-        </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-5 h-5 mr-2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Create Custom Attribute
+        </button>
       </div>
-      {/* Create modal fro customAttribute */}
+      
+      {/* Create modal for custom attribute */}
       {open && (
-      <CreateCustomAttribute setOpen={setOpen}/>
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <CreateCustomAttribute setOpen={setOpen} />
+        </div>
       )}
-      <AgGridReact
-        rowData={customAttributes}
-        columnDefs={columnDefs}
-        pagination={true}
-        paginationPageSize={20}
-      />
+
+      {/* AG Grid */}
+      <div className="ag-theme-alpine w-full" style={{ height: 400 }}>
+        <AgGridReact
+          rowData={customAttributes}
+          columnDefs={columnDefs}
+          pagination={true}
+          paginationPageSize={20}
+          domLayout="autoHeight"
+          gridOptions={{
+            paginationPageSize: 20,
+          }}
+          // Add custom grid styles here
+        />
+      </div>
     </div>
   );
 };
