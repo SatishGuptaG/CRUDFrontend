@@ -134,7 +134,7 @@ const CustomAttributeView = () => {
           {/* Options Table Header */}
           <div className="grid grid-cols-7 gap-4 font-semibold text-gray-600 bg-gray-100 p-2 rounded-md">
             <div className="text-center col-span-1">Position</div>
-            <div className="col-span-2">Display</div>
+            <div className="col-span-2">Display(Option Text)</div>
             <div className="col-span-2">Option Value</div>
             <div className="text-center col-span-1">Is Default</div>
             <div className="text-center col-span-1">Actions</div>
