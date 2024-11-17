@@ -83,6 +83,7 @@ const CustomAttributeList = () => {
           <span className="text-white">Create Custom Attribute</span>
         </div>
       </div>
+      {/* Create modal fro customAttribute */}
       {open && (
       <CreateCustomAttribute setOpen={setOpen}/>
       )}
