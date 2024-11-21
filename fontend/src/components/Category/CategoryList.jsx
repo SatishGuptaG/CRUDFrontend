@@ -80,7 +80,7 @@ const CategoryList = () => {
 
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
-      <h2>Category List</h2>
+     <h2 className="text-2xl font-bold mb-4">Category List</h2>
       <div className="flex justify-end mb-4">
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"

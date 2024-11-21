@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -10,20 +10,32 @@ const CreateProduct = ({ closeModal, refreshProducts }) => {
   const [brandId, setBrandId] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [gender, setGender] = useState(""); // New Gender state
+  const [categories, setCategories] = useState([]); // Initialize categories state
+  const [brands, setBrands] = useState([]); // Initialize brands state
 
-  // Demo data for Brand and Category
-  const brands = [
-    { id: "40d2b9ad-7b79-ef11-b6ab-8c16f6f17cd6", name: "Nikee" },
-    { id: "cebf2979-da78-ef11-b6ab-8c16f6f17cd6", name: "A1" },
-  ];
+  // Function to fetch categories
+  const fetchCategory = async () => {
+    try {
+      const response = await axios.get("https://localhost:7059/api/List/category");
+      setCategories(response.data.result);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast.error("Error fetching categories");
+    }
+  };
 
-  const categories = [
-    { id: "3253ad5b-b178-ef11-b6ab-8c16f6f17cd6", name: "Circuit" },
-    { id: "d99a5b4e-b178-ef11-b6ab-8c16f6f17cd6", name: "Monitor" },
-    { id: "d89a5b4e-b178-ef11-b6ab-8c16f6f17cd6", name: "Driver" },
-    { id: "d79a5b4e-b178-ef11-b6ab-8c16f6f17cd6", name: "Sensor" },
-  ];
+  // Function to fetch brands
+  const fetchBrand = async () => {
+    try {
+      const response = await axios.get("https://localhost:7059/api/List/brand");
+      setBrands(response.data.result);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+      toast.error("Error fetching brands");
+    }
+  };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,6 +61,16 @@ const CreateProduct = ({ closeModal, refreshProducts }) => {
     }
   };
 
+  // Fetch initial data for categories and brands
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      await fetchBrand();
+      await fetchCategory();
+    };
+
+    fetchInitialData();
+  }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -67,7 +89,7 @@ const CreateProduct = ({ closeModal, refreshProducts }) => {
       <br />
       <div>
         <label className="pb-2">
-          StockCode <span className="text-red-500">*</span>
+          Stock Code <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -101,6 +123,7 @@ const CreateProduct = ({ closeModal, refreshProducts }) => {
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
           className="w-full mt-2 border h-[35px] rounded-[5px]"
+          required
         >
           <option value="">Choose a category</option>
           {categories.map((category) => (

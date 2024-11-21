@@ -92,7 +92,7 @@ const ProductList = () => {
 
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
-      <h2>Product List</h2>
+     <h2 className="text-2xl font-bold mb-4">Product List</h2>
       <div className="w-full flex justify-end">
         <div
           className="w-[150px] bg-black h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer"
