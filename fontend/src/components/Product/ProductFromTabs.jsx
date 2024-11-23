@@ -11,6 +11,7 @@ import ProductBasicInfo from "./ProductBasicInfo";
 import ProductIdentifier from "./ProductIdentifier";
 import { ProductStatus } from "../../enums/ProductStatus";
 import ProductStatusModel from "./ProductStatusModel";
+import { FaRegEdit } from "react-icons/fa";
 
 const CATEGORY_MENU_TABS = [
   { id: 1, title: "Basic Information", iconClass: "icon-basic" },
@@ -333,51 +334,56 @@ const ProductFormTabs = () => {
             </div>
 
             {/* Status Buttons */}
-            <div className="flex items-center space-x-2 ml-auto">
+            <div className="w-full flex justify-end mb-6">
               {/* Show buttons based on status */}
               {status === ProductStatus.Draft && (
                 <button
                   type="button"
-                  className="bg-yellow-500 text-xs px-4 py-2 rounded-full hover:bg-yellow-600 focus:outline-none transition duration-200"
+                  className="flex items-center justify-center gap-2 bg-yellow-500 text-xs px-4 py-2 rounded-full hover:bg-yellow-600 focus:outline-none transition duration-200 hover:scale-105"
                   onClick={() => handleStatusChange(ProductStatus.Draft)}
                 >
                   Draft
+                  <FaRegEdit />
                 </button>
               )}
               {status === ProductStatus.Active && (
                 <button
                   type="button"
-                  className="bg-green-500 text-xs px-4 py-2 rounded-full hover:bg-green-600 focus:outline-none transition duration-200"
+                  className="flex items-center justify-center gap-2 bg-green-500 text-xs px-4 py-2 rounded-full focus:outline-none transition duration-200 hover:scale-105"
                   onClick={() => handleStatusChange(ProductStatus.Active)}
                 >
                   Active
+                  <FaRegEdit />
                 </button>
               )}
               {status === ProductStatus.Archived && (
                 <button
                   type="button"
-                  className="bg-blue-500 text-xs px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none transition duration-200"
+                  className="flex items-center justify-center gap-2 bg-blue-500 text-xs px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none transition duration-200 hover:scale-105"
                   onClick={() => handleStatusChange(ProductStatus.Archived)}
                 >
                   Archived
+                  <FaRegEdit />
                 </button>
               )}
                 {status === ProductStatus.Pending && (
                 <button
                   type="button"
-                  className="bg-orange-500 text-xs px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none transition duration-200"
+                  className="flex items-center justify-center gap-2 bg-orange-500 text-xs px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none transition duration-200 hover:scale-105"
                   onClick={() => handleStatusChange(ProductStatus.Pending)}
                 >
                   Pending
+                  <FaRegEdit />
                 </button>
               )}
               {status === ProductStatus.Discontinued && (
                 <button
                   type="button"
-                  className="bg-red-500 text-xs px-4 py-2 rounded-full hover:bg-red-600 focus:outline-none transition duration-200"
+                  className="flex items-center justify-center gap-2 bg-red-500 text-xs px-4 py-2 rounded-full hover:bg-red-600 focus:outline-none transition duration-200 hover:scale-105"
                   onClick={() => handleStatusChange(ProductStatus.Discontinued)}
                 >
                   Discontinued
+                  <FaRegEdit />
                 </button>
               )}
             </div>
