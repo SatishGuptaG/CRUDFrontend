@@ -5,27 +5,20 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { RxCross1 } from "react-icons/rx";
-import { toast } from "react-toastify";
+import { CreateCategory } from "../Modals/CreateCategory";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { APIBASE_URL } from "../../Utils/Server";
+
 const CategoryList = () => {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [name, setName] = useState("");
-  const [code, setCode] = useState("");
-
 
   const columnDefs = [
-
     { headerName: "Name", field: "name", sortable: true, filter: true },
-    {
-      headerName: "Code",
-      field: "code",
-      sortable: true,
-      filter: true,
-    },
+    { headerName: "Code", field: "code", sortable: true, filter: true },
     {
       headerName: "Actions",
       field: "actions",
@@ -34,7 +27,7 @@ const CategoryList = () => {
           <span onClick={() => handleView(params.data.id)} className="icon">
             <FontAwesomeIcon icon={faEye} />
           </span>
-            <Link to={`/categoryDetail/${params.data.id}`} className="icon">
+          <Link to={`/categoryDetail/${params.data.id}`} className="icon">
             <FontAwesomeIcon icon={faPen} />
           </Link>
           <span onClick={() => handleDelete(params.data.id)} className="icon">
@@ -48,7 +41,7 @@ const CategoryList = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        "https://localhost:7059/api/Category?currentPage=1&pageSize=40"
+        `${APIBASE_URL}/api/Category?currentPage=1&pageSize=40`
       );
       if (response.data && response.data.result) {
         setCategories(response.data.result);
@@ -68,27 +61,18 @@ const CategoryList = () => {
     alert(`View details for ID: ${id}`);
   };
 
-  const handleDelete = (id) => {
-    alert(`Delete category with ID: ${id}`);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleDelete = async (id) => {
     try {
-        const response = await axios.post("https://localhost:7059/api/Category", {
-          name,
-          code
-        });
-        if (response.data.result.isValid) {
-          toast.success(response.data.message);
-          setOpen(false);
-          fetchCategories(); // Call fetchBrands after creating a brand
-        } else {
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        toast.error(error.response?.data?.message || "Error creating category");
+      const response = await axios.delete(`${APIBASE_URL}/api/Category/${id}`);
+      if (response.status === 200) {
+        toast.success("Category deleted successfully!");
+        fetchCategories();
+      } else {
+        toast.error("Error deleting category");
       }
+    } catch (error) {
+      toast.error("Error deleting category");
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -96,66 +80,16 @@ const CategoryList = () => {
 
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
-      <h2>Category List</h2>
+     <h2 className="text-2xl font-bold mb-4">Category List</h2>
       <div className="flex justify-end mb-4">
-        <div
+        <button
           className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
           onClick={() => setOpen(true)}
         >
-          <span className="text-white">Create Category</span>
-        </div>
+          Create Category
+        </button>
       </div>
-      {open && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
-          <div className="w-[90%] md:w-[40%] h-[80vh] bg-white rounded-md shadow p-4 overflow-y-auto">
-            <div className="w-full flex justify-end">
-              <RxCross1
-                size={30}
-                className="cursor-pointer"
-                onClick={() => setOpen(false)}
-              />
-            </div>
-            <h5 className="text-[30px] font-Poppins text-center">Create Category</h5>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label className="pb-2">
-                  Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter brand name..."
-                />
-              </div>
-              <br />
-              <div>
-                <label className="pb-2">
-                  Code <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={code}
-                  className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="Enter short description..."
-                />
-              </div>
-              <br />
-              <div>
-                <input
-                  type="submit"
-                  value="Create"
-                  className="mt-2 block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] cursor-pointer bg-blue-500 text-white"
-                />
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {open && <CreateCategory setOpen={setOpen} open={open} />}
       <AgGridReact
         rowData={categories}
         columnDefs={columnDefs}
