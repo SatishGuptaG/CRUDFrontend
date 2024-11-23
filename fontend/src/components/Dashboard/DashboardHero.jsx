@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LoadingSpinner } from '../Loader/LoadingSpinner';
-
+import { HiOutlineInformationCircle } from "react-icons/hi2";
 const cardClasses = 'p-4 rounded-lg flex items-center justify-between transition-transform transform hover:scale-105 shadow-lg';
 const textClasses = 'text-lg font-semibold text-white';
 const imgClasses = 'w-12 h-12 object-cover rounded-full border-2 border-white shadow-lg';
@@ -21,11 +21,12 @@ const ProductCard = ({ status, total, imageUrl, altText, bgColor,showTooltips })
         <p className="text-sm text-white">Total: {total}</p>
       </div>
       <div className="relative group">
-        <img
+        {/* <img
           src={imageUrl}
           alt={altText}
           className={imgClasses}
-        />
+        /> */}
+        <HiOutlineInformationCircle  size={40} />
         {showTooltips  && (
            <span className="absolute left-1/2 transform -translate-x-1/2 -top-8 bg-black text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
            {statusDescriptions[status]}

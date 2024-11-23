@@ -17,9 +17,24 @@ const CustomAttributeList = () => {
   const [open, setOpen] = useState(false);
 
   const columnDefs = [
-    { headerName: "Field Code", field: "fieldCode", sortable: true, filter: true },
-    { headerName: "Field Name", field: "fieldName", sortable: true, filter: true },
-    { headerName: "Input Type", field: "inputType", sortable: true, filter: true },
+    {
+      headerName: "Field Code",
+      field: "fieldCode",
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: "Field Name",
+      field: "fieldName",
+      sortable: true,
+      filter: true,
+    },
+    {
+      headerName: "Input Type",
+      field: "inputType",
+      sortable: true,
+      filter: true,
+    },
     {
       headerName: "Last Updated",
       field: "lastUpdated",
@@ -27,7 +42,10 @@ const CustomAttributeList = () => {
       filter: true,
       cellRenderer: (params) => {
         const date = new Date(params.value);
-        const formattedDate = `${date.getDate()}-${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()} @${date.toLocaleTimeString()}`;
+        const formattedDate = `${date.getDate()}-${date.toLocaleString(
+          "default",
+          { month: "short" }
+        )}-${date.getFullYear()} @${date.toLocaleTimeString()}`;
         return formattedDate;
       },
     },
@@ -36,13 +54,22 @@ const CustomAttributeList = () => {
       field: "actions",
       cellRenderer: (params) => (
         <div className="actions flex gap-4 items-center justify-center">
-          <span onClick={() => handleView(params.data.id)} className="action-icon text-blue-500 hover:text-blue-700 transition">
+          <span
+            onClick={() => handleView(params.data.id)}
+            className="action-icon text-blue-500 hover:text-blue-700 transition"
+          >
             <FontAwesomeIcon icon={faEye} />
           </span>
-          <Link to={`/customAttributeDetail/${params.data.id}`} className="action-icon text-green-500 hover:text-green-700 transition">
+          <Link
+            to={`/customAttributeDetail/${params.data.id}`}
+            className="action-icon text-green-500 hover:text-green-700 transition"
+          >
             <FontAwesomeIcon icon={faPen} />
           </Link>
-          <span onClick={() => handleDelete(params.data.id)} className="action-icon text-red-500 hover:text-red-700 transition">
+          <span
+            onClick={() => handleDelete(params.data.id)}
+            className="action-icon text-red-500 hover:text-red-700 transition"
+          >
             <FontAwesomeIcon icon={faTrash} />
           </span>
         </div>
@@ -81,9 +108,11 @@ const CustomAttributeList = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="container mx-auto p-8 bg-gray-50 rounded-lg shadow-xl">
-      <h2 className="text-4xl font-bold text-gray-800 mb-6">Custom Attribute List</h2>
-      
+    <div>
+      <h2 className="text-4xl font-bold text-gray-800 mb-6">
+        Custom Attribute List
+      </h2>
+
       <div className="w-full flex justify-end mb-6">
         <button
           className="flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all"
@@ -106,7 +135,7 @@ const CustomAttributeList = () => {
           Create Custom Attribute
         </button>
       </div>
-      
+
       {/* Create modal for custom attribute */}
       {open && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
