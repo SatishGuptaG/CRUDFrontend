@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
 
-const CreateBrand = ({ setOpen, fetchBrands }) => {
+const CreateBrand = ({ setOpen }) => {
   const [name, setName] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [description, setDescription] = useState("");
@@ -19,7 +19,11 @@ const CreateBrand = ({ setOpen, fetchBrands }) => {
       if (response.data.result.isValid) {
         toast.success("Brand created successfully!");
         setOpen(false);
-        fetchBrands(); // Refresh the list after creation
+         // Delay before reloading the page (e.g., 2 seconds)
+         setTimeout(() => {
+          window.location.reload();
+        }, 1000); // 1000 milliseconds = 1 second
+       // fetchBrands(); // Refresh the list after creation
       } else {
         toast.error(response.data.message);
       }
