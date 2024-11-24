@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 
 const BrandList = ({ darkMode }) => {
   const [gridApi, setGridApi] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
 
   const columnDefs = useMemo(
@@ -84,7 +85,7 @@ const BrandList = ({ darkMode }) => {
 
         try {
           const response = await axios.get(
-            `https://localhost:7059/api/Brand?currentPage=${currentPage}&pageSize=${pageSize}`
+            `https://localhost:7059/api/Brand?currentPage=${currentPage}&pageSize=${pageSize}&name=${searchTerm}`
           );
 
           const { result: rowData, totalRecords } = response.data;
@@ -99,7 +100,7 @@ const BrandList = ({ darkMode }) => {
         }
       },
     }),
-    []
+    [searchTerm] // Recreate the datasource whenever searchTerm changes
   );
 
   const onGridReady = useCallback(
@@ -122,7 +123,13 @@ const BrandList = ({ darkMode }) => {
       alert(`Brand with ID: ${id} deleted!`);
     }
   };
-
+// Handle search input change
+const handleSearchChange = (event) => {
+  setSearchTerm(event.target.value);
+  if (gridApi) {
+    gridApi.setGridOption("serverSideDatasource",getServerSideDatasource()); // AG Grid provides this method to filter rows
+  }
+};
   return (
     <div
       className={`${darkMode ? "ag-theme-alpine-dark" : "ag-theme-alpine"}`}
@@ -131,7 +138,16 @@ const BrandList = ({ darkMode }) => {
       <h2 className="text-2xl font-bold mb-4">Brand List</h2>
 
       {error && <p className="text-red-500">{error}</p>}
-
+     {/* Search Bar */}
+     <div className="flex mb-4">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search by name"
+          className="border rounded-lg px-4 py-2 w-1/3"
+        />
+      </div>
       <AgGridReact
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
