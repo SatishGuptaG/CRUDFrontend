@@ -1,36 +1,31 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import "ag-grid-enterprise"; // Add this if using enterprise features
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { LoadingSpinner } from "../Loader/LoadingSpinner"; // Assuming you have a loading spinner component
-import CreateBrand from "../Modals/CreateBrand"; 
+
 
 const BrandList = ({ darkMode }) => {
-  const [open, setOpen] = useState(false);
-  const [brands, setBrands] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [gridApi, setGridApi] = useState(null);
   const [error, setError] = useState(null);
 
-  // Define column definitions for the Ag-Grid table
-  const columnDefs = [
+  const columnDefs = useMemo(() => [
     { headerName: "Name", field: "name", sortable: true, filter: true },
-    {
-      headerName: "Short Description",
-      field: "shortDescription",
-      sortable: true,
-      filter: true,
-    },
-    {
-      headerName: "Last Updated",
-      field: "lastUpdated",
-      sortable: true,
-      filter: true,
-    },
+    { headerName: "Short Description", field: "shortDescription", sortable: true, filter: true },
+    { headerName: "Last Updated", field: "lastUpdated", sortable: true, filter: true,
+      cellRenderer: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = `${date.getDate()}-${date.toLocaleString(
+          "default",
+          { month: "short" }
+        )}-${date.getFullYear()} @${date.toLocaleTimeString()}`;
+        return formattedDate;
+      },
+     },
     {
       headerName: "Actions",
       field: "actions",
@@ -48,27 +43,46 @@ const BrandList = ({ darkMode }) => {
         </div>
       ),
     },
-  ];
+  ], []);
 
-  // Fetch brands using a useCallback to avoid unnecessary re-renders
-  const fetchBrands = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        "https://localhost:7059/api/Brand?currentPage=1&pageSize=40"
-      );
-      if (response.data && response.data.result) {
-        setBrands(response.data.result);
+  const defaultColDef = useMemo(() => ({
+    flex: 1,
+    minWidth: 100,
+    sortable: true,
+    filter: true,
+  }), []);
+
+  const getServerSideDatasource = useCallback(() => ({
+    getRows: async (params) => {
+      const { startRow, endRow } = params.request;
+      const currentPage = Math.floor(startRow / 10) + 1; // Assuming 40 items per page
+      const pageSize = endRow - startRow;
+
+      try {
+        const response = await axios.get(
+          `https://localhost:7059/api/Brand?currentPage=${currentPage}&pageSize=${pageSize}`
+        );
+
+        const { result: rowData, totalRecords } = response.data;
+
+        params.success({
+          rowData,
+          rowCount: totalRecords,
+        });
+      } catch (error) {
+        params.fail();
+        setError("Error fetching data from the server.");
       }
-      setLoading(false);
-    } catch (err) {
-      setError("Error fetching brand data");
-      setLoading(false);
-    }
-  }, []);
+    },
+  }), []);
 
-  useEffect(() => {
-    fetchBrands();
-  }, [fetchBrands]);
+  const onGridReady = useCallback((params) => {
+    setGridApi(params.api);
+
+    // Ensure Server-Side Row Model is properly set
+    const datasource = getServerSideDatasource();
+    params.api.setGridOption("serverSideDatasource", datasource);
+  }, [getServerSideDatasource]);
 
   const handleView = (id) => {
     alert(`View details for ID: ${id}`);
@@ -76,41 +90,26 @@ const BrandList = ({ darkMode }) => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this brand?")) {
-      // Delete logic here
-      toast.success(`Brand with ID: ${id} deleted!`);
+      alert(`Brand with ID: ${id} deleted!`);
     }
   };
 
-  if (loading) return <LoadingSpinner />; // Improved loading feedback
-  if (error) return <div className="text-red-500">{error}</div>;
-
   return (
-    <div className={`${darkMode ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ height: 400, width: "100%" }}>
+    <div className={`${darkMode ? "ag-theme-alpine-dark" : "ag-theme-alpine"}`} style={{ height: 400, width: "100%" }}>
       <h2 className="text-2xl font-bold mb-4">Brand List</h2>
 
-      <div className="flex justify-end mb-4">
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
-          onClick={() => setOpen(true)}
-        >
-          Create Brand
-        </button>
-      </div>
-
-      {/* Create Brand Modal */}
-      {open && (
-        <CreateBrand 
-          setOpen={setOpen} 
-          fetchBrands={fetchBrands} // Pass fetchBrands to refresh the list after creation
-        />
-      )}
+      {error && <p className="text-red-500">{error}</p>}
 
       <AgGridReact
-        rowData={brands}
         columnDefs={columnDefs}
+        defaultColDef={defaultColDef}
+        rowModelType="serverSide" // Enable server-side row model
+        serverSideStoreType="partial" // Partial loading of rows
+        cacheBlockSize={10} // Matches paginationPageSize
+        onGridReady={onGridReady}
         pagination={true}
-        paginationPageSize={20}
-        domLayout="autoHeight"
+        paginationPageSize={10}
+        paginationPageSizeSelector={[10,20,30]}
       />
     </div>
   );
