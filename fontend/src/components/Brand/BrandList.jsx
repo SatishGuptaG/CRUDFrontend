@@ -1,17 +1,43 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-enterprise"; // Add this if using enterprise features
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faPen,
+  faSearch,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import CustomNoRowsOverlay from "../common/CustomNoRowsOverlay";
+
+// Utility to debounce function calls
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 const BrandList = ({ darkMode }) => {
   const [gridApi, setGridApi] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
+
+  // Using debounce to wait for the user to stop typing
+  const debouncedSearchTerm = useDebounce(searchTerm, 500); // 500ms debounce
 
   const columnDefs = useMemo(
     () => [
@@ -85,7 +111,7 @@ const BrandList = ({ darkMode }) => {
 
         try {
           const response = await axios.get(
-            `https://localhost:7059/api/Brand?currentPage=${currentPage}&pageSize=${pageSize}&name=${searchTerm}`
+            `https://localhost:7059/api/Brand?currentPage=${currentPage}&pageSize=${pageSize}&name=${debouncedSearchTerm}`
           );
 
           const { result: rowData, totalRecords } = response.data;
@@ -100,7 +126,7 @@ const BrandList = ({ darkMode }) => {
         }
       },
     }),
-    [searchTerm] // Recreate the datasource whenever searchTerm changes
+    [debouncedSearchTerm, gridApi] // Recreate the datasource only when debouncedSearchTerm changes
   );
 
   const onGridReady = useCallback(
@@ -123,13 +149,19 @@ const BrandList = ({ darkMode }) => {
       alert(`Brand with ID: ${id} deleted!`);
     }
   };
-// Handle search input change
-const handleSearchChange = (event) => {
-  setSearchTerm(event.target.value);
-  if (gridApi) {
-    gridApi.setGridOption("serverSideDatasource",getServerSideDatasource()); // AG Grid provides this method to filter rows
-  }
-};
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const onSearchButtonClick = () => {
+    console.log(searchTerm);
+    if (gridApi) {
+      // Ensure Server-Side Row Model is properly set
+      const datasource = getServerSideDatasource();
+      gridApi.setGridOption("serverSideDatasource", datasource);
+    }
+  };
+
   return (
     <div
       className={`${darkMode ? "ag-theme-alpine-dark" : "ag-theme-alpine"}`}
@@ -138,26 +170,45 @@ const handleSearchChange = (event) => {
       <h2 className="text-2xl font-bold mb-4">Brand List</h2>
 
       {error && <p className="text-red-500">{error}</p>}
-     {/* Search Bar */}
-     <div className="flex mb-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search by name"
-          className="border rounded-lg px-4 py-2 w-1/3"
-        />
+
+      {/* Search Bar */}
+      {/* Search Bar */}
+      <div className="flex mb-4 items-center space-x-4">
+        <div className="flex items-center border border-gray-300 rounded-lg w-1/3 p-2">
+          <FontAwesomeIcon icon={faSearch} className="text-gray-500" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Search by name"
+            className="ml-2 w-full p-2 outline-none"
+          />
+        </div>
+        <button
+          className="btn btn-primary p-2 rounded-lg bg-black hover:bg-green-700 text-white transition"
+          onClick={onSearchButtonClick}
+        >
+          Search
+        </button>
       </div>
+
       <AgGridReact
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         rowModelType="serverSide" // Enable server-side row model
         serverSideStoreType="partial" // Partial loading of rows
         cacheBlockSize={10} // Matches paginationPageSize
-        onGridReady={onGridReady}
         pagination={true}
-        paginationPageSize={10}
-        paginationPageSizeSelector={[10, 20, 30]}
+        paginationPageSize={10} // Fixed page size
+        paginationPageSizeSelector={[10, 20, 30]} // Allow user to choose page size
+        onGridReady={onGridReady}
+        frameworkComponents={{
+          CustomNoRowsOverlay,
+        }}
+        noRowsOverlayComponent="CustomNoRowsOverlay"
+        noRowsOverlayComponentParams={{
+          message: `No rows found at: ${new Date().toLocaleTimeString()}`,
+        }}
       />
     </div>
   );
