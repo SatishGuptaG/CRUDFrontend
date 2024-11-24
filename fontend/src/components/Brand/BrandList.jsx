@@ -8,11 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
   faPen,
+  faPlus,
   faSearch,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import CustomNoRowsOverlay from "../common/CustomNoRowsOverlay";
+import CreateBrand from "../Modals/CreateBrand";
 
 // Utility to debounce function calls
 const useDebounce = (value, delay) => {
@@ -35,7 +37,7 @@ const BrandList = ({ darkMode }) => {
   const [gridApi, setGridApi] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
-
+  const [open, setOpen] = useState(false);
   // Using debounce to wait for the user to stop typing
   const debouncedSearchTerm = useDebounce(searchTerm, 500); // 500ms debounce
 
@@ -171,26 +173,45 @@ const BrandList = ({ darkMode }) => {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* Search Bar */}
-      {/* Search Bar */}
-      <div className="flex mb-4 items-center space-x-4">
-        <div className="flex items-center border border-gray-300 rounded-lg w-1/3 p-2">
-          <FontAwesomeIcon icon={faSearch} className="text-gray-500" />
+      <div className="flex flex-col sm:flex-row items-center gap-4 mb-6">
+        {/* Search Bar */}
+        <div className="flex items-center border border-gray-300 rounded-lg w-full sm:w-1/3 p-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500">
+          <FontAwesomeIcon icon={faSearch} className="text-gray-400" />
           <input
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder="Search by name"
-            className="ml-2 w-full p-2 outline-none"
+            className="ml-2 w-full p-2 text-sm text-gray-700 outline-none placeholder-gray-400"
           />
         </div>
+
+        {/* Search Button */}
         <button
-          className="btn btn-primary p-2 rounded-lg bg-black hover:bg-green-700 text-white transition"
+          className="flex items-center justify-center gap-2 px-6 py-2 rounded-lg bg-green-600 text-white text-sm font-medium shadow-md hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500"
           onClick={onSearchButtonClick}
         >
+          <FontAwesomeIcon icon={faSearch} />
           Search
         </button>
+
+        {/* Create Brand Button */}
+        <button
+          className="flex items-center justify-center gap-2 px-6 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium shadow-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={() => setOpen(true)}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+          Create Brand
+        </button>
       </div>
+
+      {/* Create Brand Modal */}
+      {open && (
+        <CreateBrand
+          setOpen={setOpen}
+          // fetchBrands={fetchBrands} // Pass fetchBrands to refresh the list after creation
+        />
+      )}
 
       <AgGridReact
         columnDefs={columnDefs}
