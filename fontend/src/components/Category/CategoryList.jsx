@@ -97,7 +97,7 @@ const CategoryList = () => {
 
       <div className="flex flex-col sm:flex-row items-center gap-4 mb-6">
         {/* Search Bar */}
-        <div className="flex items-center border border-gray-300 rounded-lg w-full sm:w-1/3 p-2 shadow-sm">
+        <div className="flex items-center border border-gray-300 rounded-lg w-full sm:w-1/3 p-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-500">
           <FontAwesomeIcon icon={faSearch} className="text-gray-400" />
           <input
             type="text"
@@ -132,7 +132,7 @@ const CategoryList = () => {
         rowData={categories}
         columnDefs={columnDefs}
         pagination={true}
-        paginationPageSize={20}
+        paginationPageSize={10}
       />
     </div>
   );
