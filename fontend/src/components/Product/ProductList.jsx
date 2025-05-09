@@ -128,7 +128,7 @@ const ProductList = () => {
           rowData={products}
           columnDefs={columnDefs}
           pagination={true}
-          paginationPageSize={20}
+          paginationPageSize={10}
         />
       </div>
     </div>
